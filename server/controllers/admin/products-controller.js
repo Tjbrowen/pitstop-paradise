@@ -20,7 +20,7 @@ const handleImageUpload = async (req, res) => {
   }
 };
 
-//add a new product
+
 const addProduct = async (req, res) => {
   try {
     const {

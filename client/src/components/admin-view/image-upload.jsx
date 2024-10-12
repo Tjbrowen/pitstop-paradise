@@ -35,10 +35,10 @@ function ProductImageUpload({
   }
 
   async function handleRemoveImage() {
-    // If an image is uploaded, delete it from the server (if needed)
+    
     if (uploadedImageUrl) {
       try {
-        // Call your API to delete the image from Cloudinary
+        
         await axios.delete(`http://localhost:5000/api/admin/products/delete-image`, {
           data: { url: uploadedImageUrl },
         });
@@ -47,7 +47,6 @@ function ProductImageUpload({
       }
     }
 
-    // Reset the image file and input
     setImageFile(null);
     setUploadedImageUrl(null);
     if (inputRef.current) {

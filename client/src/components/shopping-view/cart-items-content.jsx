@@ -80,7 +80,7 @@ function UserCartItemsContent({ cartItem }) {
       />
       <div className="flex-1">
         <h3 className="font-extrabold">{cartItem?.title}</h3>
-        {cartItem.selectedFlavor && (  // Display selectedFlavor if it exists
+        {cartItem.selectedFlavor && (  
           <p className="text-sm text-gray-500">Flavor: {cartItem.selectedFlavor}</p>
         )}
         <div className="flex items-center gap-2 mt-1">
@@ -132,7 +132,7 @@ UserCartItemsContent.propTypes = {
     price: PropTypes.number.isRequired,
     salePrice: PropTypes.number,
     productId: PropTypes.string.isRequired,
-    selectedFlavor: PropTypes.string, // Add this line
+    selectedFlavor: PropTypes.string,
   }).isRequired,
 };
 

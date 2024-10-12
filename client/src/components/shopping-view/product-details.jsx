@@ -120,7 +120,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         <div className="">
           <div>
             <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-            <p className="text-muted-foreground text-2xl mb-5 mt-4">
+            <p className="text-muted-foreground text-1xl mb-5 mt-4">
               {productDetails?.description}
             </p>
           </div>
@@ -130,7 +130,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
-              R{productDetails?.price}
             </p>
             {productDetails?.salePrice > 0 ? (
               <p className="text-2xl font-bold text-muted-foreground">

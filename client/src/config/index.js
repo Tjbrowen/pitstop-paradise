@@ -58,11 +58,13 @@ export const addProductFormElements = [
     name: "category",
     componentType: "select",
     options: [
-      { id: "men", label: "Men" },
-      { id: "women", label: "Women" },
-      { id: "kids", label: "Kids" },
-      { id: "accessories", label: "Accessories" },
-      { id: "footwear", label: "Footwear" },
+
+      { id: "pod vapes", label: "Pod Vapes" },
+      { id: "disposable vapes", label: "Disposable Vapes" },
+      { id: "vape pens", label: "Vape Pens" },
+      { id: "cigalikes", label: "Cigalikes" },
+      { id: "vape mods", label: "Vape Mods" },
+      
     ],
   },
   {
@@ -81,14 +83,18 @@ export const addProductFormElements = [
     name: "brand",
     componentType: "select",
     options: [
-      { id: "nike", label: "Nike" },
-      { id: "adidas", label: "Adidas" },
-      { id: "puma", label: "Puma" },
-      { id: "levi", label: "Levi's" },
-      { id: "zara", label: "Zara" },
-      { id: "h&m", label: "H&M" },
+     
+     
+      { id: "airscream", label: "Airscream" },
+      { id: "elfbar", label: "Elfbar" },
+      { id: "nasty", label: "Nasty" },
+      { id: "fume", label: "Fume" },
+      { id: "dejavoo", label: "Dejavoo" },
+      { id: "ijoy", label: "IJOY" },
+
     ],
   },
+
   {
     label: "Price",
     name: "price",
@@ -96,12 +102,13 @@ export const addProductFormElements = [
     type: "number",
     placeholder: "Enter product price",
   },
+ 
   {
     label: "Sale Price",
     name: "salePrice",
     componentType: "input",
     type: "number",
-    placeholder: "Enter sale price (optional)",
+    placeholder: "Enter sale price ",
   },
   {
     label: "Total Stock",
