@@ -32,23 +32,22 @@ import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 
 const categoriesWithIcon = [
-  { id: "vapemods", label: "Vape Mods", icon: ShirtIcon },
+  { id: "vapemods", label: "Vape Mods", icon: CloudLightning  },
   { id: "podvapes", label: "Pot Vapes", icon: CloudLightning },
-  { id: "disposablevapes", label: "Disposable Vapes", icon: BabyIcon },
+  { id: "disposablevapes", label: "Disposable Vapes", icon: CloudLightning  },
   { id: "vapepens", label: "Vape Pens", icon: CloudLightning },
-  { id: "cigalikes", label: "Cigalikes", icon: BabyIcon },
+  { id: "cigalikes", label: "Cigalikes", icon: CloudLightning  },
   
  
 ];
 
 const brandsWithIcon = [
-  { id: "airscream", label: "Airscream", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728744864/Airscream_yakkmd.jpg" },
-  { id: "elfbar", label: "Alfbar", icon: WashingMachine },
-  { id: "nasty", label: "Nasty", icon: WashingMachine },
-  { id: "fume", label: "Fume", icon: ShoppingBasket },
-  { id: "dejavoo", label: "Dejavoo", icon: ShoppingBasket },
-  { id: "ijoy", label: "Ijoy", icon: BabyIcon },
-
+  { id: "airscream", label: "Airscream", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751495/airscream_ojsrf5.jpg" },
+  { id: "elfbar", label: "Alfbar", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751136/elfbarlogo_k2slwf.webp" },
+  { id: "nasty", label: "Nasty", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751691/NASTY_LOGO_rtmfkl.png" },
+  { id: "fume", label: "Fume", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751845/fume-logo_ow7drb.webp" },
+  { id: "dejavoo", label: "Dejavoo",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728752475/dejavoo-logo-rec_xnqnqb.png" },
+  { id: "ijoy", label: "Ijoy",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728817442/Ijoy_yrgst9.png" },
 ];
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -192,14 +191,14 @@ function ShoppingHome() {
       <section className="py-12">
   <div className="container mx-auto px-4">
     <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4">
       {brandsWithIcon.map((brandItem) => (
         <Card
           onClick={() => handleNavigateToListingPage(brandItem, "brand")}
-          className="cursor-pointer hover:shadow-lg transition-shadow"
+          className="cursor-pointer hover:shadow-lg transition-shadow rounded-lg overflow-hidden" // Added rounded-lg and overflow-hidden
           key={brandItem.id}
         >
-          <CardContent className="flex flex-col items-center justify-center p-0"> {/* Set padding to 0 */}
+          <CardContent className="flex flex-col items-center justify-center p-0">
             {brandItem.iconUrl ? (
               <img 
                 src={brandItem.iconUrl} 
