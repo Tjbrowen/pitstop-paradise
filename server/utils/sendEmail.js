@@ -4,7 +4,7 @@ const winston = require("winston");
 const sendPasswordResetEmail = async ({ to, subject, text, token }) => {
   const resetLink = `http://localhost:5173/reset-password/${token}`;
 
-  console.log('TJ Dev', resetLink)
+ 
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {

@@ -37,7 +37,6 @@ router.post("/forgot-password", forgotPassword);
 router.get("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
 
-  console.log('api call', res)
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
@@ -57,6 +56,7 @@ router.get("/reset-password/:token", async (req, res) => {
 });
 
 // Reset Password
+// Reset Password
 router.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
@@ -67,23 +67,36 @@ router.post("/reset-password/:token", async (req, res) => {
     return res.status(400).json({ success: false, message: "Password is required." });
   }
 
-  // Example logic for resetting password (ensure your logic is correct)
   try {
-    const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+    // Find the user by token and ensure the token is still valid
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
     if (!user) {
       return res.status(400).json({ success: false, message: "Invalid or expired token" });
     }
-    user.password = await bcrypt.hash(password, 10);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the user's password and remove the reset token fields
+    await User.updateOne(
+      { email: user.email }, // Filter by user email
+      {
+        $set: { password: hashedPassword },
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }, // Clear token fields
+      }
+    );
 
     res.json({ success: true, message: "Password reset successful" });
   } catch (error) {
-    console.error(error);
+    console.error("Error during password reset:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 
 module.exports = router;

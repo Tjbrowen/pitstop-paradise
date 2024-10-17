@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
 // Login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
+console.log('logins => ', req.body)
   if (!email || !password) {
     return res.status(400).json({
       success: false,
@@ -59,6 +59,8 @@ const loginUser = async (req, res) => {
     }
 
     const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
+
+    console.log('Password match:', checkPasswordMatch);
     if (!checkPasswordMatch) {
       return res.status(401).json({
         success: false,
@@ -96,31 +98,42 @@ const loginUser = async (req, res) => {
   }
 };
 
+
 // Forgot password
 const forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body;   
+
+  const resetToken = crypto.randomBytes(32).toString("hex"); 
+  const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
   try {
     const user = await User.findOne({ email });
+    if (user) {
+      const result = await User.updateOne({
+        where: { email },
+        data: {
+          resetPasswordToken,
+        }
+      })
+    }
     if (!user) {
       return res.status(404).json({ message: "Email not found" });
     }
 
-    const resetToken = crypto.randomBytes(32).toString("hex"); 
-    const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    // Generate a new reset token if no valid token exists
     user.resetPasswordToken = resetPasswordToken;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
 
     await user.save();
 
-    const resetUrl = `${req.protocol}://${req.get("host")}/reset-password/${resetToken}`;
-    const message = `You requested to reset your password. Click the link to reset: ${resetUrl}`;
+    const resetUrl = `${req.protocol}://${req.get("host")}/reset-password/${resetPasswordToken}`;
+    const message = `You requested to reset your password. Click the Button to reset.`;
 
     await sendEmail({
       to: user.email,
       subject: "Password Reset Request",
       text: message,
-      token: resetToken
+      token: resetPasswordToken
     });
 
     res.status(200).json({ success: true, message: "Reset link sent to your email." });

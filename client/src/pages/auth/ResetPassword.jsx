@@ -34,7 +34,7 @@ const ResetPassword = () => {
         title: "Success",
         description: "Password reset successfully!",
       });
-      navigate("/login"); 
+      navigate("/auth/login"); 
     } catch (error) {
       toast({
         title: "Error",

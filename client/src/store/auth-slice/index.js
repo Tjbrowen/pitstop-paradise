@@ -6,7 +6,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
-  error: null, // To track error messages
+  error: null, 
 };
 
 // Register User
@@ -65,7 +65,7 @@ export const logoutUser = createAsyncThunk(
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+    const token = localStorage.getItem('token'); 
     if (!token) {
       throw new Error('No token provided');
     }
@@ -75,11 +75,11 @@ export const checkAuth = createAsyncThunk(
           "Authorization": `Bearer ${token}`,
         },
       });
-      return response.data; // This will be the payload returned on success
+      return response.data; 
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Failed to verify authentication";
       console.error('Authentication check failed:', errorMessage);
-      return rejectWithValue(errorMessage); // Pass error to the reducer
+      return rejectWithValue(errorMessage); 
     }
   }
 );
@@ -134,10 +134,10 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
-      state.error = null; // Reset error when user is set successfully
+      state.error = null; 
     },
     clearError: (state) => {
-      state.error = null; // Action to clear error state
+      state.error = null; 
     },
   },
   extraReducers: (builder) => {
