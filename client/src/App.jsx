@@ -22,6 +22,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -33,10 +35,10 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
+  if (isLoading) return <Skeleton className="w-[800] bg-white h-[600px]" />;
 
   return (
-    <div className="flex flex-col overflow-hidden bg-black">
+    <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* Redirect root path to /shop/home */}
         <Route path="/" element={<Navigate to="/shop/home" replace />} />
@@ -49,13 +51,17 @@ function App() {
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
-        </Route>
+
+           </Route>
 
         {/* Auth routes */}
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
+          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+         
         </Route>
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Authenticated Routes (Requires CheckAuth) */}
         <Route
