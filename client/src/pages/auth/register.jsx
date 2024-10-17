@@ -46,6 +46,7 @@ function AuthRegister() {
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/login"
+            style={{ color: '#007bff' }} 
           >
             Login
           </Link>

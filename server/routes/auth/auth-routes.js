@@ -55,7 +55,7 @@ router.get("/reset-password/:token", async (req, res) => {
   }
 });
 
-// Reset Password
+
 // Reset Password
 router.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
@@ -68,7 +68,7 @@ router.post("/reset-password/:token", async (req, res) => {
   }
 
   try {
-    // Find the user by token and ensure the token is still valid
+    
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
@@ -78,15 +78,15 @@ router.post("/reset-password/:token", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid or expired token" });
     }
 
-    // Hash the new password
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update the user's password and remove the reset token fields
+    // 
     await User.updateOne(
-      { email: user.email }, // Filter by user email
+      { email: user.email }, 
       {
         $set: { password: hashedPassword },
-        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }, // Clear token fields
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }, 
       }
     );
 

@@ -46,6 +46,7 @@ function AuthLogin() {
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/register"
+            style={{ color: '#007bff' }} 
           >
             Register
           </Link>
@@ -59,12 +60,14 @@ function AuthLogin() {
         onSubmit={onSubmit}
       />
       <div className="text-center">
-        <Link
-          className="font-medium text-primary hover:underline"
-          to="/auth/forgot-password"
-        >
-          Forgot your password?
-        </Link>
+      <Link
+  className="font-medium hover:underline"
+  to="/auth/forgot-password"
+  style={{ color: '#007bff' }}  
+>
+  Forgot your password?
+</Link>
+
       </div>
     </div>
   );

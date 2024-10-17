@@ -4,6 +4,7 @@ const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
 
 const createOrder = async (req, res) => {
+
   try {
     const {
       userId,
@@ -36,12 +37,12 @@ const createOrder = async (req, res) => {
               name: item.title,
               sku: item.productId,
               price: item.price.toFixed(2),
-              currency: "ZAR",
+              currency: "USD",
               quantity: item.quantity,
             })),
           },
           amount: {
-            currency: "ZAR",
+            currency: "USD",
             total: totalAmount.toFixed(2),
           },
           description: "description",

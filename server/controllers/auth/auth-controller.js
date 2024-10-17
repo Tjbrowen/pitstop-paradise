@@ -18,6 +18,7 @@ const registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 12);
+    console.log("Hashed Password:", hashPassword); 
     const newUser = new User({
       userName,
       email,
@@ -25,6 +26,7 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
+    console.log("User registered successfully:", newUser); 
     res.status(201).json({
       success: true,
       message: "Registration successful",
@@ -41,7 +43,8 @@ const registerUser = async (req, res) => {
 // Login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-console.log('logins => ', req.body)
+
+  console.log('Logins => ', req.body); // Log request body
   if (!email || !password) {
     return res.status(400).json({
       success: false,
@@ -58,9 +61,13 @@ console.log('logins => ', req.body)
       });
     }
 
-    const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
+    const trimmedPassword = password.trim(); // Trim the password input
+    console.log('Entered Password:', trimmedPassword);
+    console.log('Stored Hashed Password:', checkUser.password);
 
+    const checkPasswordMatch = await bcrypt.compare(trimmedPassword, checkUser.password);
     console.log('Password match:', checkPasswordMatch);
+
     if (!checkPasswordMatch) {
       return res.status(401).json({
         success: false,
@@ -90,13 +97,14 @@ console.log('logins => ', req.body)
       },
     });
   } catch (e) {
-    console.error("Login error: ", e.message);  
+    console.error("Login error: ", e.message);
     res.status(500).json({
       success: false,
       message: "An error occurred during login",
     });
   }
 };
+
 
 
 // Forgot password
