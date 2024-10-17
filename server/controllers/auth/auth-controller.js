@@ -43,8 +43,7 @@ const registerUser = async (req, res) => {
 // Login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
-  console.log('Logins => ', req.body); // Log request body
+console.log('logins => ', req.body)
   if (!email || !password) {
     return res.status(400).json({
       success: false,
@@ -61,13 +60,9 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const trimmedPassword = password.trim(); // Trim the password input
-    console.log('Entered Password:', trimmedPassword);
-    console.log('Stored Hashed Password:', checkUser.password);
+    const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
 
-    const checkPasswordMatch = await bcrypt.compare(trimmedPassword, checkUser.password);
     console.log('Password match:', checkPasswordMatch);
-
     if (!checkPasswordMatch) {
       return res.status(401).json({
         success: false,
@@ -97,14 +92,13 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (e) {
-    console.error("Login error: ", e.message);
+    console.error("Login error: ", e.message);  
     res.status(500).json({
       success: false,
       message: "An error occurred during login",
     });
   }
 };
-
 
 
 // Forgot password
