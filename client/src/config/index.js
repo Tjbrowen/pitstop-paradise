@@ -168,7 +168,7 @@ export const categoryOptionsMap = {
 
 export const brandOptionsMap = {
   airscream: "Airscream",
-  alfbar: "Alfbar",
+  elfbar: "elfbar",
   nasty: "Nasty",
   fume: "Fume",
   dejavoo: "Dejavoo",
@@ -185,7 +185,7 @@ export const filterOptions = {
   ],
   brand: [
     { id: "airscream", label: "Airscream" },
-    { id: "alfbar", label: "Alfbar" },
+    { id: "elfbar", label: "Elfbar" },
     { id: "nasty", label: "Nasty" },
     { id: "fume", label: "Fume" },
     { id: "dejavoo", label: "Dejavoo" },
