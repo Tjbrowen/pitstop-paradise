@@ -1,21 +1,11 @@
 import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
+
 import {
-  Airplay,
-  BabyIcon,
+ 
   ChevronLeftIcon,
   ChevronRightIcon,
   CloudLightning,
-  Heater,
-  Images,
-  Shirt,
-  ShirtIcon,
-  ShoppingBasket,
-  UmbrellaIcon,
-  WashingMachine,
-  WatchIcon,
+ 
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -177,6 +167,7 @@ function ShoppingHome() {
                   handleNavigateToListingPage(categoryItem, "category")
                 }
                 className="cursor-pointer hover:shadow-lg transition-shadow"
+                key={categoryItem.id}
               >
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />

@@ -59,11 +59,11 @@ export const addProductFormElements = [
     componentType: "select",
     options: [
 
-      { id: "pod vapes", label: "Pod Vapes" },
-      { id: "disposable vapes", label: "Disposable Vapes" },
-      { id: "vape pens", label: "Vape Pens" },
+      { id: "podvapes", label: "Pod Vapes" },
+      { id: "disposablevapes", label: "Disposable Vapes" },
+      { id: "vapepens", label: "Vape Pens" },
       { id: "cigalikes", label: "Cigalikes" },
-      { id: "vape mods", label: "Vape Mods" },
+      { id: "vapemods", label: "Vape Mods" },
       
     ],
   },
@@ -162,7 +162,7 @@ export const categoryOptionsMap = {
  
   disposablevapes: "Disposable Vapes",
   vapepens: "Vape Pens",
-  accessories: "Accessories",
+  vapemods: "Vape Mods",
   cigalikes: "Cigalikes",
 };
 

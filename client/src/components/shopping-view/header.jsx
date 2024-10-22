@@ -35,6 +35,7 @@ function MenuItems() {
       getCurrentMenuItem.id !== "home" &&
       getCurrentMenuItem.id !== "products" &&
       getCurrentMenuItem.id !== "search"
+   
         ? {
             category: [getCurrentMenuItem.id],
           }

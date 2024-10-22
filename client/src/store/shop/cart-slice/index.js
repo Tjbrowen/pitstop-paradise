@@ -8,18 +8,18 @@ const initialState = {
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ userId, productId,selectedFlavor, quantity }) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/shop/cart/add",
-      {
-        userId,
-        productId,
-        quantity,
-        selectedFlavor,
-      }
-    );
-
-    return response.data;
+  async ({ userId, productId, flavor, quantity }, { rejectWithValue }) => {
+    console.log("Adding to cart:", { userId, productId, flavor, quantity });
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/shop/cart/add",
+        { userId, productId, quantity, flavor }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error adding to cart:", error.response.data);
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 

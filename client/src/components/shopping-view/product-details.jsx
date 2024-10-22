@@ -17,22 +17,22 @@ import PropTypes from "prop-types";
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
+  const [selectedFlavor, setSelectedFlavor] = useState(""); // State for selected flavor
+
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
-
   const { toast } = useToast();
 
-  function handleRatingChange(getRating) {
-    console.log(getRating, "getRating");
+  const flavors = ["Vanilla", "Chocolate", "Strawberry", "Mint", "Caramel"]; // Flavor options
 
+  function handleRatingChange(getRating) {
     setRating(getRating);
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
     let getCartItems = cartItems.items || [];
-
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
         (item) => item.productId === getCurrentProductId
@@ -44,7 +44,6 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             title: `Only ${getQuantity} quantity can be added for this item`,
             variant: "destructive",
           });
-
           return;
         }
       }
@@ -54,13 +53,12 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
+        flavor: selectedFlavor, // Include selected flavor
       })
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast({
-          title: "Product is added to cart",
-        });
+        toast({ title: "Product is added to cart" });
       }
     });
   }
@@ -86,9 +84,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setRating(0);
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
-        toast({
-          title: "Review added successfully!",
-        });
+        toast({ title: "Review added successfully!" });
       }
     });
   }
@@ -97,10 +93,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
 
-  console.log(reviews, "reviews");
-
   const averageReview =
-    reviews && reviews.length > 0
+    reviews?.length > 0
       ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
         reviews.length
       : 0;
@@ -116,26 +110,20 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             height={600}
             className="aspect-square w-full object-cover"
           />
+          <p className="text-muted-foreground text-1xl mb-5 mt-4 ">
+            {productDetails?.description}
+          </p>
         </div>
-        <div className="">
+        <div>
           <div>
             <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-            <p className="text-muted-foreground text-1xl mb-5 mt-4">
-              {productDetails?.description}
-            </p>
           </div>
           <div className="flex items-center justify-between">
-            <p
-              className={`text-3xl font-bold text-primary ${
-                productDetails?.salePrice > 0 ? "line-through" : ""
-              }`}
-            >
-            </p>
-            {productDetails?.salePrice > 0 ? (
+            {productDetails?.salePrice > 0 && (
               <p className="text-2xl font-bold text-muted-foreground">
                 R{productDetails?.salePrice}
               </p>
-            ) : null}
+            )}
           </div>
           <div className="flex items-center gap-2 mt-2">
             <div className="flex items-center gap-0.5">
@@ -144,6 +132,23 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             <span className="text-muted-foreground">
               ({averageReview.toFixed(2)})
             </span>
+          </div>
+          <div className="mt-4">
+            <Label>Select Flavor</Label>
+            <select
+              value={selectedFlavor}
+              onChange={(e) => setSelectedFlavor(e.target.value)}
+              className="w-full border border-gray-300 rounded-md p-2 mt-1"
+            >
+              <option value="" disabled>
+                Choose a flavor
+              </option>
+              {flavors.map((flavor) => (
+                <option key={flavor} value={flavor}>
+                  {flavor}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (
@@ -159,6 +164,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                     productDetails?.totalStock
                   )
                 }
+                disabled={!selectedFlavor} // Disable if no flavor selected
               >
                 Add to Cart
               </Button>
@@ -168,9 +174,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
-              {reviews && reviews.length > 0 ? (
+              {reviews?.length > 0 ? (
                 reviews.map((reviewItem) => (
-                  <div className="flex gap-4" key={reviewItem._id}>
+                  <div className="flex gap-4" key={reviewItem.id || reviewItem._id}>
                     <Avatar className="w-10 h-10 border">
                       <AvatarFallback>
                         {reviewItem?.userName[0].toUpperCase()}
@@ -204,7 +210,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               <Input
                 name="reviewMsg"
                 value={reviewMsg}
-                onChange={(event) => setReviewMsg(event.target.value)}
+                onChange={(e) => setReviewMsg(e.target.value)}
                 placeholder="Write a review..."
               />
               <Button
@@ -226,13 +232,20 @@ ProductDetailsDialog.propTypes = {
   setOpen: PropTypes.func.isRequired,
   productDetails: PropTypes.shape({
     _id: PropTypes.string,
+    image: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,
-    image: PropTypes.string,
-    price: PropTypes.number,
     salePrice: PropTypes.number,
+    price: PropTypes.number,
     totalStock: PropTypes.number,
-  }),
+  }).isRequired,
+};
+
+ProductDetailsDialog.defaultProps = {
+  productDetails: {
+    salePrice: 0,
+    totalStock: 0,
+  },
 };
 
 export default ProductDetailsDialog;

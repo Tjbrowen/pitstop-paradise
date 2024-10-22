@@ -27,7 +27,7 @@ function AdminProductTile({
                 product?.salePrice > 0 ? "line-through" : ""
               } text-lg font-semibold text-primary`}
             >
-              R{product?.price}
+       
             </span>
             {product?.salePrice > 0 ? (
               <span className="text-lg font-bold">R{product?.salePrice}</span>
