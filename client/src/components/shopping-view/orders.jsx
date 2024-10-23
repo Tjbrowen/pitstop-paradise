@@ -31,7 +31,7 @@ function ShoppingOrders() {
 
   useEffect(() => {
     dispatch(getAllOrdersByUserId(user?.id));
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true);
@@ -60,7 +60,7 @@ function ShoppingOrders() {
           <TableBody>
             {orderList && orderList.length > 0
               ? orderList.map((orderItem) => (
-                <TableRow key={orderItem?._id}> 
+                  <TableRow key={orderItem?._id}>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
@@ -70,6 +70,14 @@ function ShoppingOrders() {
                             ? "bg-green-500"
                             : orderItem?.orderStatus === "rejected"
                             ? "bg-red-600"
+                            : orderItem?.orderStatus === "pending"
+                            ? "bg-yellow-500"
+                            : orderItem?.orderStatus === "delivered"
+                            ? "bg-blue-500"
+                            : orderItem?.orderStatus === "inProcess"
+                            ? "bg-orange-500"
+                            : orderItem?.orderStatus === "inShipping"
+                            ? "bg-purple-500"
                             : "bg-black"
                         }`}
                       >
@@ -106,3 +114,4 @@ function ShoppingOrders() {
 }
 
 export default ShoppingOrders;
+

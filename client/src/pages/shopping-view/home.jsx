@@ -22,7 +22,7 @@ import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 
 const categoriesWithIcon = [
-  { id: "vapemods", label: "Vape Mods", icon: CloudLightning  },
+  { id: "Vape Mods", label: "Vape Mods", icon: CloudLightning  },
   { id: "podvapes", label: "Pot Vapes", icon: CloudLightning },
   { id: "disposablevapes", label: "Disposable Vapes", icon: CloudLightning  },
   { id: "vapepens", label: "Vape Pens", icon: CloudLightning },

@@ -70,7 +70,7 @@ export const addProductFormElements = [
   {
     label: "Flavor", 
     name: "flavor",
-    componentType: "select",
+    componentType: "multiselect",
     options: [
       { id: "vanilla", label: "Vanilla" },
       { id: "chocolate", label: "Chocolate" },
@@ -142,8 +142,8 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/listing",
   },
   {
-    id: "vapemods",
-    label: "Vape Mods",
+    id: "podvapes",
+    label: "Pod Vapes",
     path: "/shop/listing",
   },
   {
@@ -162,7 +162,7 @@ export const categoryOptionsMap = {
  
   disposablevapes: "Disposable Vapes",
   vapepens: "Vape Pens",
-  vapemods: "Vape Mods",
+  podvapes: "Pod Vapes",
   cigalikes: "Cigalikes",
 };
 
@@ -180,7 +180,7 @@ export const filterOptions = {
     
     { id: "disposablevapes", label: "Disposable Vapes" },
     { id: "vapepens", label: "Vape Pens" },
-    { id: "vapemods", label: "Vape Mods" },
+    { id: "podvapes", label: "Pod Vapes" },
     { id: "cigalikes", label: "Cigalikes" },
   ],
   brand: [

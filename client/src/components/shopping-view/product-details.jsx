@@ -69,13 +69,25 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     setRating(0);
     setReviewMsg("");
   }
-
   function handleAddReview() {
+    // Check if the user is logged in
+    if (!user?.id) {
+      toast({ title: " You must be logged in to add a review." });
+      return; 
+    }
+  
+    // Check if the product was delivered
+    if (!productDetails?.isDelivered) {
+      toast({ title: "Error: Product not delivered. Unable to add review." });
+      return; 
+    }
+  
+    // Proceed to add review if the user is logged in and product was delivered
     dispatch(
       addReview({
         productId: productDetails?._id,
-        userId: user?.id,
-        userName: user?.userName,
+        userId: user.id,
+        userName: user.userName,
         reviewMessage: reviewMsg,
         reviewValue: rating,
       })
@@ -85,10 +97,14 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         setReviewMsg("");
         dispatch(getReviews(productDetails?._id));
         toast({ title: "Review added successfully!" });
+      } else {
+        // Handle error case from addReview
+        toast({ title: "Error adding review." });
       }
     });
   }
-
+  
+  
   useEffect(() => {
     if (productDetails !== null) dispatch(getReviews(productDetails?._id));
   }, [productDetails]);
@@ -99,6 +115,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         reviews.length
       : 0;
 
+      console.log('productDetails: ', productDetails)
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
@@ -143,7 +160,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               <option value="" disabled>
                 Choose a flavor
               </option>
-              {flavors.map((flavor) => (
+              {productDetails?.flavor.map((flavor) => (
                 <option key={flavor} value={flavor}>
                   {flavor}
                 </option>
@@ -170,18 +187,25 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             )}
           </div>
+          <h1>Reviews are not available until the product is delivered.</h1>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
             <h2 className="text-xl font-bold mb-4">Reviews</h2>
+           
             <div className="grid gap-6">
               {reviews?.length > 0 ? (
                 reviews.map((reviewItem) => (
                   <div className="flex gap-4" key={reviewItem.id || reviewItem._id}>
                     <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>
-                        {reviewItem?.userName[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+  {reviewItem?.userProfilePicture ? (
+    <img src={reviewItem.userProfilePicture} alt={`${reviewItem.userName}'s profile`} className="w-full h-full object-cover" />
+  ) : (
+    <AvatarFallback>
+      {reviewItem?.userName[0].toUpperCase()}
+    </AvatarFallback>
+  )}
+</Avatar>
+
                     <div className="grid gap-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-bold">{reviewItem?.userName}</h3>

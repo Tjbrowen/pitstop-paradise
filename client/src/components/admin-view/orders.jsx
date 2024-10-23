@@ -70,13 +70,13 @@ function AdminOrdersView() {
                             : orderItem?.orderStatus === "rejected"
                             ? "bg-red-600"
                             : orderItem?.orderStatus === "pending"
-                            ? "bg-yellow-500" // Color for pending
+                            ? "bg-yellow-500" 
                             : orderItem?.orderStatus === "delivered"
-                            ? "bg-blue-500" // Color for delivered
+                            ? "bg-blue-500" 
                             : orderItem?.orderStatus === "inProcess"
-                            ? "bg-orange-500" // Color for in process
+                            ? "bg-orange-500" 
                             : orderItem?.orderStatus === "inShipping"
-                            ? "bg-purple-500" // Color for in shipping
+                            ? "bg-purple-500" 
                             : "bg-black"
                         }`}
                       >

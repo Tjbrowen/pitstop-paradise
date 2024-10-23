@@ -25,14 +25,21 @@ export const addToCart = createAsyncThunk(
 
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
-  async (userId) => {
-    const response = await axios.get(
-      `http://localhost:5000/api/shop/cart/get/${userId}`
-    );
-
-    return response.data;
+  async (userId, { rejectWithValue }) => {
+    if (!userId) {
+      return rejectWithValue("User ID is missing");
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/shop/cart/get/${userId}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching cart");
+    }
   }
 );
+
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",

@@ -11,7 +11,10 @@ function ShoppingProductTile({
 }) {
   return (
     <Card className="w-full max-w-sm mx-auto">
-      <div onClick={() => handleGetProductDetails(product?._id)}>
+      
+      <div 
+      className="cursor-pointer"
+      onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img
             src={product?.image}
@@ -28,7 +31,7 @@ function ShoppingProductTile({
             </Badge>
           ) : product?.salePrice > 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              Sale
+              {`Only ${product?.totalStock} items left`}
             </Badge>
           ) : null}
         </div>
@@ -52,20 +55,7 @@ function ShoppingProductTile({
           </div>
         </CardContent>
       </div>
-      <CardFooter>
-        {product?.totalStock === 0 ? (
-          <Button className="w-full opacity-60 cursor-not-allowed">
-            Out Of Stock
-          </Button>
-        ) : (
-          <Button
-            onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            className="w-full"
-          >
-            Add to cart
-          </Button>
-        )}
-      </CardFooter>
+      
     </Card>
   );
 }

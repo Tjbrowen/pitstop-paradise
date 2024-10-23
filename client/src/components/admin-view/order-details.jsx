@@ -70,17 +70,26 @@ function AdminOrderDetailsView({ orderDetails }) {
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Status</p>
             <Label>
-              <Badge
-                className={`py-1 px-3 ${
-                  orderDetails?.orderStatus === "confirmed,delivered"
-                    ? "bg-green-500"
-                    : orderDetails?.orderStatus === "rejected"
-                    ? "bg-red-600"
-                    : "bg-black"
-                }`}
-              >
-                {orderDetails?.orderStatus}
-              </Badge>
+            <Badge
+  className={`py-1 px-3 ${
+    orderDetails?.orderStatus === "confirmed"
+      ? "bg-green-500"
+      : orderDetails?.orderStatus === "rejected"
+      ? "bg-red-600"
+      : orderDetails?.orderStatus === "pending"
+      ? "bg-yellow-500"
+      : orderDetails?.orderStatus === "delivered"
+      ? "bg-blue-500"
+      : orderDetails?.orderStatus === "inProcess"
+      ? "bg-orange-500"
+      : orderDetails?.orderStatus === "inShipping"
+      ? "bg-purple-500"
+      : "bg-black"
+  }`}
+>
+  {orderDetails?.orderStatus}
+</Badge>
+
             </Label>
           </div>
         </div>
@@ -94,7 +103,7 @@ function AdminOrderDetailsView({ orderDetails }) {
                     <li className="flex items-center justify-between">
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
-                      <span>Price: ${item.price}</span>
+                      <span>Price: R{item.price}</span>
                     </li>
                   ))
                 : null}

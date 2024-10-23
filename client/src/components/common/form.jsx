@@ -2,6 +2,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
   Select,
+  SelectGroup,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -84,8 +85,33 @@ function CommonForm({
           />
         );
 
-        break;
-
+      break;
+      case "multiselect":
+        element = (
+          <Select
+            onValueChange={(value) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: value,
+              })
+            }
+            value={value}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={getControlItem.label} />
+            </SelectTrigger>
+            <SelectGroup>
+              {getControlItem.options && getControlItem.options.length > 0
+                ? getControlItem.options.map((optionItem) => (
+                    <SelectItem key={optionItem.id} value={optionItem.id}>
+                      {optionItem.label}
+                    </SelectItem>
+                  ))
+                : null}
+            </SelectGroup>
+          </Select>
+        );
+      break;
       default:
         element = (
           <Input
