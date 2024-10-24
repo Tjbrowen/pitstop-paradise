@@ -8,13 +8,13 @@ const sendPasswordResetEmail = async ({ to, subject, text, token }) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: process.env.EMAIL_USER,
+      user: process.env.SALES_EMAIL,
       pass: process.env.EMAIL_PASS,
     },
   });
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: process.env.SALES_EMAIL,
     to,
     subject,
     html: `

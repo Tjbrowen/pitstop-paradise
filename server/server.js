@@ -19,6 +19,8 @@ const shopReviewRouter = require("./routes/shop/review-routes");
 const commonFeatureRouter = require("./routes/common/feature-routes");
 const { resetPassword, authMiddleware } = require("./controllers/auth/auth-controller"); 
 
+const sendOrderAlertEmail = require('./utils/sendOrderAlertEmail');
+
 mongoose.connect(
   'mongodb+srv://pitstopparadiseholdings:qTMk4wFkGC0S01Ad@cluster0.eehl7.mongodb.net/'
 ).then(() => console.log('Mongo connected'))
@@ -61,7 +63,26 @@ app.use('/api/auth', authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
 
-// Ensure this line is below the definition of resetPassword
+// Adding the sendOrderAlertEmail route
+app.post('/api/auth/send-order-alert-email', async (req, res) => {
+  const { customerEmail, orderDetails } = req.body;
+
+  if (!customerEmail || !orderDetails) {
+    return res.status(400).json({ message: 'Customer email and order details are required.' });
+  }
+
+  try {
+    await sendOrderAlertEmail({
+      to: customerEmail,
+      subject: 'Your Order Confirmation',
+      orderDetails
+    });
+
+    res.status(200).json({ message: 'Order alert email sent successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to send order alert email', error });
+  }
+});
  
 
 app.use("/api/shop/products", shopProductsRouter);

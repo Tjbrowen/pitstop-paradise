@@ -14,18 +14,24 @@ import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import PropTypes from "prop-types";
 
+
+
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
-  const [selectedFlavor, setSelectedFlavor] = useState(""); // State for selected flavor
-
+  const [selectedFlavor, setSelectedFlavor] = useState("");
+  
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
   const { toast } = useToast();
+  const handleFlavorChange = (flavor) => {
+    setSelectedFlavor(flavor);
+  };
 
-  const flavors = ["Vanilla", "Chocolate", "Strawberry", "Mint", "Caramel"]; // Flavor options
+
+ 
 
   function handleRatingChange(getRating) {
     setRating(getRating);
@@ -53,7 +59,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-        flavor: selectedFlavor, // Include selected flavor
+     
       })
     ).then((data) => {
       if (data?.payload?.success) {
@@ -68,6 +74,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     dispatch(setProductDetails());
     setRating(0);
     setReviewMsg("");
+    setSelectedFlavor("");
   }
   function handleAddReview() {
     // Check if the user is logged in
@@ -151,22 +158,27 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             </span>
           </div>
           <div className="mt-4">
-            <Label>Select Flavor</Label>
-            <select
-              value={selectedFlavor}
-              onChange={(e) => setSelectedFlavor(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2 mt-1"
-            >
-              <option value="" disabled>
-                Choose a flavor
-              </option>
-              {productDetails?.flavor.map((flavor) => (
-                <option key={flavor} value={flavor}>
-                  {flavor}
-                </option>
-              ))}
-            </select>
-          </div>
+  
+  <select
+    value={selectedFlavor}
+    onChange={(e) => handleFlavorChange(e.target.value)} // Update state on selection change
+    className="mt-2 border rounded p-2"
+  >
+    <option value="" disabled>Select a flavor</option> {/* Placeholder option */}
+    {productDetails?.flavor?.length > 0 ? (
+      productDetails.flavor.map((flavor) => (
+        <option key={flavor} value={flavor}>
+          {flavor}
+        </option>
+      ))
+    ) : (
+      <option>No flavors available</option> // Message if there are no flavors
+    )}
+  </select>
+</div>
+
+
+
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (
               <Button className="w-full opacity-60 cursor-not-allowed">

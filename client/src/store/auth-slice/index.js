@@ -102,6 +102,8 @@ export const requestPasswordReset = createAsyncThunk(
   }
 );
 
+
+
 // Reset Password
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
@@ -124,6 +126,24 @@ export const resetPassword = createAsyncThunk(
     }
   }
 );
+
+export const requestSendOrderAlertEmail = createAsyncThunk(
+  "auth/sendOrderAlertEmail",
+  async ({ customerEmail, orderDetails }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/send-order-alert-email",
+        { customerEmail, orderDetails },
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to send order alert email");
+    }
+  }
+);
+
+
 
 
 // Auth Slice

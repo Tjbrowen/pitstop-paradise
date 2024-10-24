@@ -88,30 +88,45 @@ function CommonForm({
       break;
       case "multiselect":
         element = (
-          <Select
-            onValueChange={(value) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: value,
-              })
-            }
-            value={value}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder={getControlItem.label} />
-            </SelectTrigger>
-            <SelectGroup>
-              {getControlItem.options && getControlItem.options.length > 0
-                ? getControlItem.options.map((optionItem) => (
-                    <SelectItem key={optionItem.id} value={optionItem.id}>
+          <div>
+            {getControlItem.options && getControlItem.options.length > 0
+              ? getControlItem.options.map((optionItem) => (
+                  <div key={optionItem.id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={optionItem.id}
+                      name={getControlItem.name}
+                      value={optionItem.id}
+                      checked={formData[getControlItem.name]?.includes(optionItem.id)}
+                      onChange={(event) => {
+                        const selectedValues = formData[getControlItem.name] || [];
+                        if (event.target.checked) {
+                          setFormData({
+                            ...formData,
+                            [getControlItem.name]: [...selectedValues, optionItem.id],
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            [getControlItem.name]: selectedValues.filter(
+                              (selectedValue) => selectedValue !== optionItem.id
+                            ),
+                          });
+                        }
+                      }}
+                    />
+                    <label htmlFor={optionItem.id} className="ml-2">
                       {optionItem.label}
-                    </SelectItem>
-                  ))
-                : null}
-            </SelectGroup>
-          </Select>
+                    </label>
+                  </div>
+                ))
+              : null}
+          </div>
         );
-      break;
+        break;
+      
+      
+
       default:
         element = (
           <Input

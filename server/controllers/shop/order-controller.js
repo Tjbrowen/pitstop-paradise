@@ -2,9 +2,9 @@ const paypal = require("../../helpers/paypal");
 const Order = require("../../models/Order");
 const Cart = require("../../models/Cart");
 const Product = require("../../models/Product");
+const sendOrderAlertEmail = require("../../utils/sendOrderAlertEmail");
 
 const createOrder = async (req, res) => {
-
   try {
     const {
       userId,
@@ -53,17 +53,24 @@ const createOrder = async (req, res) => {
     paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
       if (error) {
         console.log(error);
-
         return res.status(500).json({
           success: false,
-          message: "Error while creating paypal payment",
+          message: "Error while creating PayPal payment",
         });
       } else {
         const newlyCreatedOrder = new Order({
           userId,
           cartId,
           cartItems,
-          addressInfo,
+          addressInfo: { 
+            addressId: addressInfo.addressId,
+            address: addressInfo.address,
+            city: addressInfo.city,
+            postcode: addressInfo.postcode,
+            phone: addressInfo.phone,
+            notes: addressInfo.notes,
+            email: addressInfo.email,
+          },
           orderStatus,
           paymentMethod,
           paymentStatus,
@@ -74,8 +81,9 @@ const createOrder = async (req, res) => {
           payerId,
         });
 
-        await newlyCreatedOrder.save();
+        
 
+        await newlyCreatedOrder.save();
         const approvalURL = paymentInfo.links.find(
           (link) => link.rel === "approval_url"
         ).href;
@@ -91,7 +99,7 @@ const createOrder = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };
@@ -105,45 +113,63 @@ const capturePayment = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: "Order can not be found",
+        message: "Order cannot be found",
       });
     }
 
+    // Update payment and order status
     order.paymentStatus = "paid";
     order.orderStatus = "confirmed";
     order.paymentId = paymentId;
     order.payerId = payerId;
 
+    // Update stock for each product in the order
     for (let item of order.cartItems) {
       let product = await Product.findById(item.productId);
 
       if (!product) {
         return res.status(404).json({
           success: false,
-          message: `Not enough stock for this product ${product.title}`,
+          message: `Not enough stock for this product ${item.title}`,
         });
       }
 
       product.totalStock -= item.quantity;
-
       await product.save();
     }
 
+    // Delete the cart after order confirmation
     const getCartId = order.cartId;
     await Cart.findByIdAndDelete(getCartId);
 
     await order.save();
 
+    console.log(order)
+
+    // Validate and send the order confirmation email
+    if (!order.addressInfo.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email address is not defined in the order.",
+      });
+    }
+
+    await sendOrderAlertEmail({
+      to: order.addressInfo.email,
+      subject: 'Your Order Confirmation',
+      orderDetails: order.cartItems,
+    });
+
     res.status(200).json({
       success: true,
-      message: "Order confirmed",
+      message: "Order confirmed and email sent",
       data: order,
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };
@@ -169,7 +195,7 @@ const getAllOrdersByUser = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };
@@ -195,7 +221,7 @@ const getOrderDetails = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured!",
+      message: "Some error occurred!",
     });
   }
 };

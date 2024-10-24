@@ -70,6 +70,7 @@ function ShoppingCheckout() {
         postcode: currentSelectedAddress?.postcode,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
+        email: user?.email,
       },
       orderStatus: "pending",
       paymentMethod: "paypal",
