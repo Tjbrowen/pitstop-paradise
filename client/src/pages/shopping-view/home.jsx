@@ -20,6 +20,8 @@ import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
+import { SimpleFooter } from "./footer";
+
 
 const categoriesWithIcon = [
   { id: "Vape Mods", label: "Vape Mods", icon: CloudLightning  },
@@ -232,7 +234,11 @@ function ShoppingHome() {
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
       />
+       <div className="">
+      <SimpleFooter/>
     </div>
+    </div>
+   
   );
 }
 

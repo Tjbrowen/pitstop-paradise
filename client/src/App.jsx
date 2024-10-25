@@ -25,6 +25,9 @@ import SearchProducts from "./pages/shopping-view/search";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 import PaypalCancelPage from "./pages/shopping-view/paypal-cancel";
+import Policies from "./pages/shopping-view/policies";
+import PrivacyPolicy from "./pages/shopping-view/privacy-policy";
+import RefundPolicy from "./pages/shopping-view/refund-policy";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -53,7 +56,9 @@ function App() {
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
-
+          <Route path="policies" element={<Policies />} />
+        
+         
            </Route>
 
         {/* Auth routes */}
@@ -64,6 +69,9 @@ function App() {
          
         </Route>
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="policies" element={<Policies />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="refund-policy" element={<RefundPolicy />} />
 
         {/* Authenticated Routes (Requires CheckAuth) */}
         <Route
@@ -79,6 +87,8 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="features" element={<AdminFeatures />} />
         </Route>
+
+       
 
         <Route
           path="/shop/account"
