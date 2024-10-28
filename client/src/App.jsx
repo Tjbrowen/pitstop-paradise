@@ -28,6 +28,12 @@ import PaypalCancelPage from "./pages/shopping-view/paypal-cancel";
 import Policies from "./pages/shopping-view/policies";
 import PrivacyPolicy from "./pages/shopping-view/privacy-policy";
 import RefundPolicy from "./pages/shopping-view/refund-policy";
+import ImportantPolicies from "./pages/shopping-view/important-policies";
+import ShppingPolicy from "./pages/shopping-view/shipping-policy";
+import PaymentPolicy from "./pages/shopping-view/payment-policy";
+import Terms from "./pages/shopping-view/terms";
+import ContactUs from "./pages/shopping-view/contact";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -42,6 +48,7 @@ function App() {
   if (isLoading) return <Skeleton className="w-[800] bg-white h-[600px]" />;
 
   return (
+    <>
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* Redirect root path to /shop/home */}
@@ -57,6 +64,8 @@ function App() {
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
           <Route path="policies" element={<Policies />} />
+          <Route path="contact" element={<ContactUs />} />
+         
         
          
            </Route>
@@ -69,9 +78,14 @@ function App() {
          
         </Route>
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="important-policies" element={<ImportantPolicies />} />
         <Route path="policies" element={<Policies />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="refund-policy" element={<RefundPolicy />} />
+        <Route path="shipping-policy" element={<ShppingPolicy />} />
+        <Route path="payment-policy" element={<PaymentPolicy />} />
+        <Route path="terms" element={<Terms />} />
+        
 
         {/* Authenticated Routes (Requires CheckAuth) */}
         <Route
@@ -105,8 +119,19 @@ function App() {
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Toaster 
+  position="top-right" 
+  reverseOrder={false} 
+  toastOptions={{
+    style: {
+      marginTop: '40px', 
+    },
+  }} 
+/>
     </div>
+    </>
   );
+  
 }
 
 export default App;

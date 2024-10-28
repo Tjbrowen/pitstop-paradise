@@ -1,7 +1,28 @@
 import ShoppingHeader from "@/components/shopping-view/header";
 import { SimpleFooter } from "./footer";
+import { useEffect, useState } from "react";
 
 function PrivacyPolicy() {
+
+    const [showTopButton, setShowTopButton] = useState(false);
+
+    useEffect(() => {
+        // Show button when page is scrolled down 300px
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                setShowTopButton(true);
+            } else {
+                setShowTopButton(false);
+            }
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
         <div>
             <ShoppingHeader />
@@ -117,6 +138,20 @@ function PrivacyPolicy() {
                     </p>
                 </div>
             </div>
+
+            {showTopButton && (
+                <div className="flex my-4">
+                      {showTopButton && (
+                <button
+                    onClick={scrollToTop}
+                    className="fixed bottom-12 right-8 bg-blue-500 text-white rounded-full p-3 shadow-lg hover:bg-blue-700 transition-colors"
+                    aria-label="Back to top"
+                >
+                    ⬆️
+                </button>
+            )}
+                </div>
+            )}
 
             <SimpleFooter />
         </div>

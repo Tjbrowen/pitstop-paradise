@@ -43,7 +43,7 @@ export function SimpleFooter() {
         <li>
           <Typography
             as="a"
-            href="#"
+            href="contact"
             color="blue-gray"
             className="font-normal transition-colors hover:text-green-500 focus:text-green-500 text-white"
           >
