@@ -26,20 +26,27 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@react-pdf-viewer/core": "^3.7.0",
+    "@react-pdf-viewer/toolbar": "^3.12.0",
+    "@react-pdf/renderer": "^4.0.0",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "firebase": "^10.14.1",
+    "glob": "^11.0.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.429.0",
+    "pdfjs-dist": "^3.7.107",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "react-hot-toast": "^2.4.1",
+    "react-pdf": "^9.1.1",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.27.0",
+    "rimraf": "^6.0.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -56,7 +63,7 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "vite": "^5.4.1"
+    "vite": "^5.4.10"
   },
   "packageManager": "yarn@4.4.1+sha512.f825273d0689cc9ead3259c14998037662f1dcd06912637b21a450e8da7cfeb4b1965bbee73d16927baa1201054126bc385c6f43ff4aa705c8631d26e12460f1"
 }

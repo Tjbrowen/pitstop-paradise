@@ -34,6 +34,8 @@ import PaymentPolicy from "./pages/shopping-view/payment-policy";
 import Terms from "./pages/shopping-view/terms";
 import ContactUs from "./pages/shopping-view/contact";
 import { Toaster } from "react-hot-toast";
+import ShopMore from "./pages/shopping-view/shop-more";
+
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -65,6 +67,7 @@ function App() {
           <Route path="search" element={<SearchProducts />} />
           <Route path="policies" element={<Policies />} />
           <Route path="contact" element={<ContactUs />} />
+          <Route path="shop-more" element={<ShopMore />} /> 
          
         
          
