@@ -35,7 +35,7 @@ import Terms from "./pages/shopping-view/terms";
 import ContactUs from "./pages/shopping-view/contact";
 import { Toaster } from "react-hot-toast";
 import ShopMore from "./pages/shopping-view/shop-more";
-
+import AgeVerification from "./pages/shopping-view/age-verification";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -51,90 +51,82 @@ function App() {
 
   return (
     <>
-    <div className="flex flex-col overflow-hidden bg-white">
-      <Routes>
-        {/* Redirect root path to /shop/home */}
-        <Route path="/" element={<Navigate to="/shop/home" replace />} />
+      <div className="flex flex-col overflow-hidden bg-white">
+        <Routes>
+          {/* Redirect root path to /age-verification */}
+          <Route path="/" element={<Navigate to="/age-verification" replace />} />
+          <Route path="/age-verification" element={<AgeVerification />} />
 
-        {/* Public Routes (No authentication needed) */}
-        <Route path="/shop" element={<ShoppingLayout />}>
-          <Route path="home" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
-          <Route path="checkout" element={<ShoppingCheckout />} />
-          <Route path="paypal-cancel" element={<PaypalCancelPage />} />
-          <Route path="paypal-return" element={<PaypalReturnPage />} />
-          <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="search" element={<SearchProducts />} />
-          <Route path="policies" element={<Policies />} />
-          <Route path="contact" element={<ContactUs />} />
-          <Route path="shop-more" element={<ShopMore />} /> 
-         
-        
-         
-           </Route>
+          {/* Public Routes (No authentication needed) */}
+          <Route path="/shop" element={<ShoppingLayout />}>
+            <Route path="home" element={<ShoppingHome />} />
+            <Route path="listing" element={<ShoppingListing />} />
+            <Route path="checkout" element={<ShoppingCheckout />} />
+            <Route path="paypal-cancel" element={<PaypalCancelPage />} />
+            <Route path="paypal-return" element={<PaypalReturnPage />} />
+            <Route path="payment-success" element={<PaymentSuccessPage />} />
+            <Route path="search" element={<SearchProducts />} />
+            <Route path="policies" element={<Policies />} />
+            <Route path="contact" element={<ContactUs />} />
+            <Route path="shop-more" element={<ShopMore />} />
+          </Route>
 
-        {/* Auth routes */}
-        <Route path="/auth" element={<AuthLayout />}>
-          <Route path="login" element={<AuthLogin />} />
-          <Route path="register" element={<AuthRegister />} />
-          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-         
-        </Route>
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="important-policies" element={<ImportantPolicies />} />
-        <Route path="policies" element={<Policies />} />
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="refund-policy" element={<RefundPolicy />} />
-        <Route path="shipping-policy" element={<ShppingPolicy />} />
-        <Route path="payment-policy" element={<PaymentPolicy />} />
-        <Route path="terms" element={<Terms />} />
-        
+          {/* Auth routes */}
+          <Route path="/auth" element={<AuthLayout />}>
+            <Route path="login" element={<AuthLogin />} />
+            <Route path="register" element={<AuthRegister />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+          </Route>
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="important-policies" element={<ImportantPolicies />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="refund-policy" element={<RefundPolicy />} />
+          <Route path="shipping-policy" element={<ShppingPolicy />} />
+          <Route path="payment-policy" element={<PaymentPolicy />} />
+          <Route path="terms" element={<Terms />} />
 
-        {/* Authenticated Routes (Requires CheckAuth) */}
-        <Route
-          path="/admin"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AdminLayout />
-            </CheckAuth>
-          }
-        >
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="features" element={<AdminFeatures />} />
-        </Route>
+          {/* Authenticated Routes (Requires CheckAuth) */}
+          <Route
+            path="/admin"
+            element={
+              <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                <AdminLayout />
+              </CheckAuth>
+            }
+          >
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="features" element={<AdminFeatures />} />
+          </Route>
 
-       
+          <Route
+            path="/shop/account"
+            element={
+              <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+                <ShoppingAccount />
+              </CheckAuth>
+            }
+          />
 
-        <Route
-          path="/shop/account"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <ShoppingAccount />
-            </CheckAuth>
-          }
+          {/* Unauth page for restricted access */}
+          <Route path="/unauth-page" element={<UnauthPage />} />
+
+          {/* Catch-all route for 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster 
+          position="top-right" 
+          reverseOrder={false} 
+          toastOptions={{
+            style: {
+              marginTop: '40px', 
+            },
+          }} 
         />
-
-        {/* Unauth page for restricted access */}
-        <Route path="/unauth-page" element={<UnauthPage />} />
-        
-        {/* Catch-all route for 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Toaster 
-  position="top-right" 
-  reverseOrder={false} 
-  toastOptions={{
-    style: {
-      marginTop: '40px', 
-    },
-  }} 
-/>
-    </div>
+      </div>
     </>
   );
-  
 }
 
 export default App;

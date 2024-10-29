@@ -57,7 +57,7 @@ function MenuItems() {
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
           onClick={() => handleNavigate(menuItem)}
-          className="text-sm font-medium cursor-pointer"
+          className="text-sm font-medium cursor-pointer text-white"
           key={menuItem.id}
         >
           {menuItem.label}
@@ -119,6 +119,12 @@ function HeaderRightContent() {
     <AvatarFallback className="bg-black text-white font-extrabold group-hover:bg-green-500 group-hover:text-white">
       {user?.userName[0].toUpperCase()}
     </AvatarFallback>
+    {/* Conditionally render the "Login" label */}
+    {!user && (
+      <span className="absolute inset-0 flex items-center justify-center text-white font-bold">
+        Login
+      </span>
+    )}
   </Avatar>
 </div>
 
@@ -151,7 +157,7 @@ function ShoppingHeader() {
 
   return (
     <header 
-    style={{ backgroundColor: "#8B4513" }} 
+    style={{ backgroundColor: "#990011" }} 
     className="sticky top-0 z-40 w-full border-b"
   >
       <div className="flex h-16 items-center justify-between px-4 md:px-6">

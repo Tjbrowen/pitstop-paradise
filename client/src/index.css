@@ -67,3 +67,23 @@
     @apply bg-background text-foreground;
   } */
 }
+
+.age-verification-background {
+  background-image: url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verification-content {
+  background-color: rgba(255, 255, 255, 0.3); /* White with 90% opacity */
+  border: 1px solid #d1d5db; /* Gray border */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow */
+  padding: 1.5rem; /* Padding */
+  text-align: center; /* Centered text */
+}

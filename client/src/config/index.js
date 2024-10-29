@@ -131,26 +131,7 @@ export const shoppingViewHeaderMenuItems = [
     path: "/shop/listing",
   },
  
-  {
-    id: "disposablevapes",
-    label: "Disposable Vapes",
-    path: "/shop/listing",
-  },
-  {
-    id: "vapepens",
-    label: "Vape Pens",
-    path: "/shop/listing",
-  },
-  {
-    id: "podvapes",
-    label: "Pod Vapes",
-    path: "/shop/listing",
-  },
-  {
-    id: "cigalikes",
-    label: "Cigalikes",
-    path: "/shop/listing",
-  },
+  
   {
     id: "search",
     label: "Search",

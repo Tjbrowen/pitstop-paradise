@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 import {
  
@@ -116,7 +117,16 @@ function ShoppingHome() {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+<div 
+  className="flex flex-col min-h-screen" 
+  style={{
+    backgroundImage: `url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')`,
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center', 
+    backgroundRepeat: 'no-repeat', 
+    backgroundAttachment: 'fixed', 
+  }}
+>
       <div className="relative w-full h-[600px] overflow-hidden">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
@@ -159,7 +169,7 @@ function ShoppingHome() {
 
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">
             Shop by category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -171,8 +181,8 @@ function ShoppingHome() {
                 className="cursor-pointer hover:shadow-lg transition-shadow"
                 key={categoryItem.id}
               >
-                <CardContent className="flex flex-col items-center justify-center p-6">
-                  <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                <CardContent className="flex flex-col items-center justify-center p-6 text-white">
+                  <categoryItem.icon className="w-12 h-12 mb-4 text-white" />
                   <span className="font-bold">{categoryItem.label}</span>
                 </CardContent>
               </Card>
@@ -183,7 +193,7 @@ function ShoppingHome() {
 
       <section className="py-12">
   <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
+    <h2 className="text-3xl font-bold text-center mb-8 text-white">Shop by Brand</h2>
     <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4">
       {brandsWithIcon.map((brandItem) => (
         <Card
@@ -213,7 +223,7 @@ function ShoppingHome() {
 
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">
             Feature Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -234,9 +244,21 @@ function ShoppingHome() {
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
       />
+<a
+  href="https://wa.me/27762567775" // Directly include your WhatsApp number
+  className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"
+  target="_blank" // Open in a new tab
+  rel="noopener noreferrer" // Security best practice
+>
+  <WhatsAppIcon className="w-10 h-10 text-green-500" />
+</a>
+
+
+
        <div className="">
       <SimpleFooter/>
     </div>
+  
     </div>
    
   );

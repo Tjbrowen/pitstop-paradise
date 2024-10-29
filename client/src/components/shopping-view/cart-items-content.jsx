@@ -106,8 +106,8 @@ function UserCartItemsContent({ cartItem }) {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col items-end">
-        <p className="font-semibold">
+      <div className="flex flex-col items-end text-white">
+        <p className="font-semibold text-white">
           R
           {(
             (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
