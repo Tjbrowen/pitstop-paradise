@@ -39,7 +39,7 @@ const brandsWithIcon = [
   { id: "elfbar", label: "Alfbar", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751136/elfbarlogo_k2slwf.webp" },
   { id: "nasty", label: "Nasty", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751691/NASTY_LOGO_rtmfkl.png" },
   { id: "fume", label: "Fume", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751845/fume-logo_ow7drb.webp" },
-  { id: "dejavoo", label: "Dejavoo",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728752475/dejavoo-logo-rec_xnqnqb.png" },
+  { id: "airfuze", label: "Airfuze",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1730301734/mega-menu-116147-logo-671865073_320x_bbfc8p.avif" },
   { id: "ijoy", label: "Ijoy",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728817442/Ijoy_yrgst9.png" },
 ];
 function ShoppingHome() {
