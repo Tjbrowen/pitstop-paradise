@@ -89,7 +89,7 @@ export const addProductFormElements = [
       { id: "elfbar", label: "Elfbar" },
       { id: "nasty", label: "Nasty" },
       { id: "fume", label: "Fume" },
-      { id: "dejavoo", label: "Dejavoo" },
+      { id: "airfuze", label: "Airfuze" },
       { id: "ijoy", label: "IJOY" },
 
     ],
@@ -152,7 +152,7 @@ export const brandOptionsMap = {
   elfbar: "elfbar",
   nasty: "Nasty",
   fume: "Fume",
-  dejavoo: "Dejavoo",
+  airfuze: "Airfuze",
   ijoy: "Ijoy",
 };
 
@@ -169,7 +169,7 @@ export const filterOptions = {
     { id: "elfbar", label: "Elfbar" },
     { id: "nasty", label: "Nasty" },
     { id: "fume", label: "Fume" },
-    { id: "dejavoo", label: "Dejavoo" },
+    { id: "airfuze", label: "Airfuze" },
     { id: "ijoy", label: "Ijoy" },
   ],
 };
