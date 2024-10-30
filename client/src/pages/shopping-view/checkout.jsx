@@ -97,7 +97,16 @@ function ShoppingCheckout() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div
+    className="flex flex-col min-h-screen"
+    style={{
+      backgroundImage: `url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      backgroundAttachment: "fixed",
+    }}
+  >
       <div className="relative h-[300px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
@@ -114,8 +123,8 @@ function ShoppingCheckout() {
             : null}
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
-              <span className="font-bold">Total</span>
-              <span className="font-bold">R{totalCartAmount}</span>
+              <span className="font-bold text-white">Total</span>
+              <span className="font-bold text-white">R{totalCartAmount}</span>
             </div>
           </div>
           <div className="mt-4 w-full">
