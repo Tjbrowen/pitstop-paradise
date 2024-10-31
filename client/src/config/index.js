@@ -62,7 +62,7 @@ export const addProductFormElements = [
       { id: "podvapes", label: "Pod Vapes" },
       { id: "disposablevapes", label: "Disposable Vapes" },
       { id: "vapepens", label: "Vape Pens" },
-      { id: "cigalikes", label: "Cigalikes" },
+      { id: "cbd", label: "CBD" },
       { id: "vapemods", label: "Vape Mods" },
       
     ],
@@ -76,6 +76,7 @@ export const addProductFormElements = [
       { id: "chocolate", label: "Chocolate" },
       { id: "strawberry", label: "Strawberry" },
       { id: "mint", label: "Mint" },
+      { id: " assortedflavors", label: " Assorted Flavors" },
     ],
   },
   {
@@ -91,6 +92,7 @@ export const addProductFormElements = [
       { id: "fume", label: "Fume" },
       { id: "airfuze", label: "Airfuze" },
       { id: "ijoy", label: "IJOY" },
+       { id: "cbd", label: "CBD" },
 
     ],
   },
@@ -144,7 +146,7 @@ export const categoryOptionsMap = {
   disposablevapes: "Disposable Vapes",
   vapepens: "Vape Pens",
   podvapes: "Pod Vapes",
-  cigalikes: "Cigalikes",
+  cBD: "CBD",
 };
 
 export const brandOptionsMap = {
@@ -154,6 +156,7 @@ export const brandOptionsMap = {
   fume: "Fume",
   airfuze: "Airfuze",
   ijoy: "Ijoy",
+  cbd: "CBD",
 };
 
 export const filterOptions = {
@@ -162,7 +165,7 @@ export const filterOptions = {
     { id: "disposablevapes", label: "Disposable Vapes" },
     { id: "vapepens", label: "Vape Pens" },
     { id: "podvapes", label: "Pod Vapes" },
-    { id: "cigalikes", label: "Cigalikes" },
+    { id: "cbd", label: "CBD" },
   ],
   brand: [
     { id: "airscream", label: "Airscream" },
@@ -171,6 +174,7 @@ export const filterOptions = {
     { id: "fume", label: "Fume" },
     { id: "airfuze", label: "Airfuze" },
     { id: "ijoy", label: "Ijoy" },
+    { id: "cbd", label: "CBD" },
   ],
 };
 

@@ -29,7 +29,7 @@ const categoriesWithIcon = [
   { id: "podvapes", label: "Pot Vapes", icon: CloudLightning },
   { id: "disposablevapes", label: "Disposable Vapes", icon: CloudLightning  },
   { id: "vapepens", label: "Vape Pens", icon: CloudLightning },
-  { id: "cigalikes", label: "Cigalikes", icon: CloudLightning  },
+  { id: "cbd", label: "CBD", icon: CloudLightning  },
   
  
 ];
