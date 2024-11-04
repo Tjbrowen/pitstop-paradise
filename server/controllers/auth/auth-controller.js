@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto"); 
 const User = require("../../models/User");
@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 12);
-    console.log("Hashed Password:", hashPassword); 
+    console.log("Generated Hashed Password:", hashPassword);
     const newUser = new User({
       userName,
       email,
@@ -60,15 +60,7 @@ console.log('logins => ', req.body)
       });
     }
 
-    const checkPasswordMatch = await bcrypt.compare(password, checkUser.password);
-
-    console.log('Password match:', checkPasswordMatch);
-    if (!checkPasswordMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Incorrect password! Please try again.",
-      });
-    }
+    
 
     const token = jwt.sign(
       {

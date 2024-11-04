@@ -12,19 +12,39 @@ const initialState = {
 // Register User
 export const registerUser = createAsyncThunk(
   "auth/register",
-  async (formData, { rejectWithValue }) => {
+  async (formData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
         formData,
         { withCredentials: true }
       );
-      return response.data;
+
+     
+      console.log('Registration response:', response.data);
+
+      if (response.data.success) {
+        
+        console.log('Dispatching login action after registration for email:', formData.email);
+
+        const loginResponse = await dispatch(
+          loginUser({ email: formData.email, password: formData.password })
+        );
+
+      
+        return loginResponse.payload;
+      }
+
+      return response.data; 
     } catch (error) {
+      console.error("Registration error:", error); 
       return rejectWithValue(error.response?.data || "Registration failed");
     }
   }
 );
+
+
+
 
 // Login User
 export const loginUser = createAsyncThunk(
@@ -167,8 +187,11 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state) => {
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        // You can choose to log in here or just set user directly
+        state.user = action.payload.user || null; 
+        state.isAuthenticated = !!action.payload.user; 
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;

@@ -25,6 +25,8 @@ function AuthRegister() {
         toast({
           title: data?.payload?.message,
         });
+        // Trigger Redux to update logged-in user status
+        dispatch({ type: "auth/setUser", payload: data.payload.user });
         navigate("/");
       } else {
         toast({
@@ -42,11 +44,11 @@ function AuthRegister() {
           Create new account
         </h1>
         <p className="mt-2">
-          Already have an account
+          Already have an account?
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/login"
-            style={{ color: '#007bff' }} 
+            style={{ color: "#007bff" }}
           >
             Login
           </Link>
