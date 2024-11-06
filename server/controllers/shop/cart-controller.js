@@ -3,7 +3,7 @@ const Product = require("../../models/Product");
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { userId, productId, quantity, selectedFlavor } = req.body;
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({
@@ -32,9 +32,10 @@ const addToCart = async (req, res) => {
     );
 
     if (findCurrentProductIndex === -1) {
-      cart.items.push({ productId, quantity });
+      cart.items.push({ productId, quantity,selectedFlavor });
     } else {
       cart.items[findCurrentProductIndex].quantity += quantity;
+      cart.items[findCurrentProductIndex].selectedFlavor = selectedFlavor;
     }
 
     await cart.save();
@@ -90,6 +91,7 @@ const fetchCartItems = async (req, res) => {
       price: item.productId.price,
       salePrice: item.productId.salePrice,
       quantity: item.quantity,
+      selectedFlavor: item.selectedFlavor, 
     }));
 
     res.status(200).json({
@@ -153,6 +155,7 @@ const updateCartItemQty = async (req, res) => {
       price: item.productId ? item.productId.price : null,
       salePrice: item.productId ? item.productId.salePrice : null,
       quantity: item.quantity,
+      selectedFlavor: item.selectedFlavor, 
     }));
 
     res.status(200).json({

@@ -15,6 +15,9 @@ export const addToCart = createAsyncThunk(
         "http://localhost:5000/api/shop/cart/add",
         { userId, productId, quantity, flavor }
       );
+
+      console.log("API response data:", response.data);
+
       return response.data;
     } catch (error) {
       console.error("Error adding to cart:", error.response.data);

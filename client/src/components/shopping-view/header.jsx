@@ -160,11 +160,18 @@ function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <header 
-      style={{ backgroundColor: "#990011" }} 
+    <header
+      style={{
+        backgroundImage: "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
       className="sticky top-0 z-40 w-full border-b"
     >
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black opacity-80"></div>
+      
+      <div className="relative z-10 flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/shop/home" className="flex items-center">
           <img 
             src="https://res.cloudinary.com/daynaexaz/image/upload/v1728726708/Pitstop_Paradise_logo_1_optimized_1000_ko3i9s.png" 
@@ -172,7 +179,7 @@ function ShoppingHeader() {
             className="h-20 w-16 mt-3"
           />
         </Link>
-
+    
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden">
@@ -185,10 +192,11 @@ function ShoppingHeader() {
             <HeaderRightContent />
           </SheetContent>
         </Sheet>
+    
         <div className="hidden lg:block">
           <MenuItems />
         </div>
-
+    
         <div className="hidden lg:block">
           <HeaderRightContent />
         </div>
@@ -196,5 +204,6 @@ function ShoppingHeader() {
     </header>
   );
 }
+
 
 export default ShoppingHeader;

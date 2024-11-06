@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -41,25 +41,26 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
+        (item) => item.productId === getCurrentProductId && item.flavor === selectedFlavor // Check for the same flavor
       );
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + 1 > getTotalStock) {
           toast({
-            title: `Only ${getQuantity} quantity can be added for this item`,
+            title: `Only ${getTotalStock - getQuantity} quantity can be added for this item`, // Update message to show available quantity
             variant: "destructive",
           });
           return;
         }
       }
     }
+    
     dispatch(
       addToCart({
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-     
+        flavor: selectedFlavor, 
       })
     ).then((data) => {
       if (data?.payload?.success) {
@@ -68,6 +69,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
     });
   }
+  
 
   function handleDialogClose() {
     setOpen(false);
@@ -125,7 +127,15 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       console.log('productDetails: ', productDetails)
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]" style={{ backgroundColor: "#6b7280" }}>
+      <DialogContent
+  className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]"
+  style={{
+    backgroundImage: "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center"
+  }}
+>
+
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}
@@ -134,17 +144,17 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
             height={600}
             className="aspect-square w-full object-cover"
           />
-          <p className="text-muted-foreground text-1xl mb-5 mt-4 ">
+          <p className="text-muted-foreground text-1xl mb-5 mt-4 text-white ">
             {productDetails?.description}
           </p>
         </div>
         <div>
           <div>
-            <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
+            <h1 className="text-3xl font-extrabold text-white">{productDetails?.title}</h1>
           </div>
           <div className="flex items-center justify-between">
             {productDetails?.salePrice > 0 && (
-              <p className="text-2xl font-bold text-muted-foreground">
+              <p className="text-2xl font-bold text-muted-foreground text-white">
                 R{productDetails?.salePrice}
               </p>
             )}
@@ -161,10 +171,10 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   
   <select
     value={selectedFlavor}
-    onChange={(e) => handleFlavorChange(e.target.value)} // Update state on selection change
+    onChange={(e) => handleFlavorChange(e.target.value)} 
     className="mt-2 border rounded p-2"
   >
-    <option value="" disabled>Select a flavor</option> {/* Placeholder option */}
+    <option value="" disabled>Select a flavor</option> 
     {productDetails?.flavor?.length > 0 ? (
       productDetails.flavor.map((flavor) => (
         <option key={flavor} value={flavor}>
@@ -172,7 +182,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         </option>
       ))
     ) : (
-      <option>No flavors available</option> // Message if there are no flavors
+      <option>No flavors available</option> 
     )}
   </select>
 </div>
@@ -186,23 +196,27 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               </Button>
             ) : (
               <Button
-                className="w-full"
-                onClick={() =>
-                  handleAddToCart(
-                    productDetails?._id,
-                    productDetails?.totalStock
-                  )
-                }
-                disabled={!selectedFlavor} // Disable if no flavor selected
-              >
-                Add to Cart
-              </Button>
+  className="w-full text-white bg-blue-500 hover:bg-green-500 cursor-pointer"
+  style={{
+    backgroundColor: selectedFlavor ? '#3b82f6' : '', 
+    transition: 'background-color 0.3s ease'
+  }}
+  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#22c55e')} 
+  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#3b82f6')} 
+  onClick={() =>
+    handleAddToCart(productDetails?._id, productDetails?.totalStock, productDetails?.flavor)
+  }
+  disabled={!selectedFlavor} 
+>
+  Add to Cart
+</Button>
+
             )}
           </div>
-          <h1>Reviews are not available until the product is delivered.</h1>
+          <h1 className="text-white">Reviews are not available until the product is delivered.</h1>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
+            <h2 className="text-xl font-bold mb-4 text-white">Reviews</h2>
            
             <div className="grid gap-6">
               {reviews?.length > 0 ? (
@@ -232,11 +246,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                   </div>
                 ))
               ) : (
-                <h1>No Reviews</h1>
+                <h1 className="text-white">No Reviews</h1>
               )}
             </div>
             <div className="mt-10 flex-col flex gap-2">
-              <Label>Write a review</Label>
+              <Label  className="text-white">Write a review</Label>
               <div className="flex gap-1">
                 <StarRatingComponent
                   rating={rating}
@@ -249,12 +263,14 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 onChange={(e) => setReviewMsg(e.target.value)}
                 placeholder="Write a review..."
               />
-              <Button
-                onClick={handleAddReview}
-                disabled={reviewMsg.trim() === ""}
-              >
-                Submit
-              </Button>
+             <Button
+  className="bg-blue-500 text-white cursor-pointer hover:bg-green-500"
+  onClick={handleAddReview}
+  disabled={reviewMsg.trim() === ""}
+>
+  Submit
+</Button>
+
             </div>
           </div>
         </div>
@@ -274,6 +290,8 @@ ProductDetailsDialog.propTypes = {
     salePrice: PropTypes.number,
     price: PropTypes.number,
     totalStock: PropTypes.number,
+    flavor: PropTypes.arrayOf(PropTypes.string), 
+    isDelivered: PropTypes.bool,
   }).isRequired,
 };
 

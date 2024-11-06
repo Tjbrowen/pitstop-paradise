@@ -21,9 +21,15 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       : 0;
 
   return (
-    <SheetContent className="sm:max-w-md">
+      <SheetContent
+      className="sm:max-w-md bg-cover bg-center"
+      style={{
+        backgroundImage: "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
+      }}
+    >
       <SheetHeader>
-        <SheetTitle>Your Cart</SheetTitle>
+      <SheetTitle style={{ color: 'white' }}>Your Cart</SheetTitle>
+
       </SheetHeader>
       <div className="mt-8 space-y-4">
         {cartItems && cartItems.length > 0
@@ -32,8 +38,8 @@ function UserCartWrapper({ cartItems, setOpenCartSheet }) {
       </div>
       <div className="mt-8 space-y-4">
         <div className="flex justify-between">
-          <span className="font-bold">Total</span>
-          <span className="font-bold">R{totalCartAmount}</span>
+          <span className="font-bold text-white">Total</span>
+          <span className="font-bold text-white">R{totalCartAmount}</span>
         </div>
       </div>
       <Button

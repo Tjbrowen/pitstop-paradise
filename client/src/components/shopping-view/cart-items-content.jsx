@@ -71,6 +71,8 @@ function UserCartItemsContent({ cartItem }) {
     });
   }
 
+  console.log("Selected Flavor:", cartItem?.selectedFlavor);
+
   return (
     <div className="flex items-center space-x-4">
       <img
@@ -79,10 +81,16 @@ function UserCartItemsContent({ cartItem }) {
         className="w-20 h-20 rounded object-cover"
       />
       <div className="flex-1">
-        <h3 className="font-extrabold">{cartItem?.title}</h3>
-        {cartItem.selectedFlavor && (  
-          <p className="text-sm text-gray-500">Flavor: {cartItem.selectedFlavor}</p>
-        )}
+        <h3 className="font-extrabold text-white">{cartItem?.title}</h3>
+        {cartItem.selectedFlavor ? (
+    <p className="text-sm text-white">Flavor: {cartItem.selectedFlavor}</p>
+) : (
+    <p className="text-sm text-white">No flavor selected</p>
+)}
+
+     
+
+        
         <div className="flex items-center gap-2 mt-1">
           <Button
             variant="outline"
@@ -94,7 +102,7 @@ function UserCartItemsContent({ cartItem }) {
             <Minus className="w-4 h-4" />
             <span className="sr-only">Decrease</span>
           </Button>
-          <span className="font-semibold">{cartItem?.quantity}</span>
+          <span className="font-semibold text-white">{cartItem?.quantity}</span>
           <Button
             variant="outline"
             className="h-8 w-8 rounded-full"
@@ -122,6 +130,7 @@ function UserCartItemsContent({ cartItem }) {
       </div>
     </div>
   );
+  
 }
 
 UserCartItemsContent.propTypes = {
