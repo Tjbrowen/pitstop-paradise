@@ -13,9 +13,9 @@ const ShopMore = () => {
       minHeight="100vh" 
     >
       {/* PDF Viewer Component with Worker */}
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
-        <Viewer fileUrl={pdfFile} />
-      </Worker>
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js">
+  <Viewer fileUrl={pdfFile} />
+</Worker>
 
       {/* Button positioned inside the PDF viewer */}
       <a href={pdfFile} download>

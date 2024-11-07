@@ -131,16 +131,18 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           {currentEditedId !== null ? "Edit Address" : "Add New Address"}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <CommonForm
-          formControls={addressFormControls}
-          formData={formData}
-          setFormData={setFormData}
-          buttonText={currentEditedId !== null ? "Edit" : "Add"}
-          onSubmit={handleManageAddress}
-          isBtnDisabled={!isFormValid()}
-        />
-      </CardContent>
+      <CardContent className="space-y-3 text-black">
+  <CommonForm
+    formControls={addressFormControls}
+    formData={formData}
+    setFormData={setFormData}
+    buttonText={currentEditedId !== null ? "Edit" : "Add"}
+    onSubmit={handleManageAddress}
+    isBtnDisabled={!isFormValid()}
+    
+  /> 
+</CardContent>
+
     </Card>
   );
 }

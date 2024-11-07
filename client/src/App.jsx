@@ -54,8 +54,22 @@ function App() {
       <div className="flex flex-col overflow-hidden bg-white">
         <Routes>
           {/* Redirect root path to /age-verification */}
-          <Route path="/" element={<Navigate to="/age-verification" replace />} />
-          <Route path="/age-verification" element={<AgeVerification />} />
+          
+          {/* Redirect root path to /age-verification if not authenticated */}
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate to="/shop/home" replace /> : <Navigate to="/age-verification" replace />
+            }
+          />
+          
+          {/* Only render AgeVerification if user is not authenticated */}
+          <Route
+            path="/age-verification"
+            element={
+              !isAuthenticated ? <AgeVerification /> : <Navigate to="/shop/home" replace />
+            }
+          />
 
           {/* Public Routes (No authentication needed) */}
           <Route path="/shop" element={<ShoppingLayout />}>

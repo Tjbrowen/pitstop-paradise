@@ -99,5 +99,16 @@
 /* Optional hover effect */
 .h-4:hover {
   background: linear-gradient(135deg, #f9f9f9, #e9e9e9);
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); 
 }
+
+.card-content label {
+  color: white; 
+}
+
+/* Custom button style */
+.button-white-border {
+  border: 2px solid white;
+}
+
+
