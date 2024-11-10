@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
+
 import {
  
   ChevronLeftIcon,
@@ -22,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import { getFeatureImages } from "@/store/common-slice";
 import { SimpleFooter } from "./footer";
+import { CircularProgress } from "@mui/material";
 
 
 const categoriesWithIcon = [
@@ -44,6 +46,7 @@ const brandsWithIcon = [
 ];
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loading, setLoading] = useState(true);
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
@@ -127,45 +130,57 @@ function ShoppingHome() {
     backgroundAttachment: 'fixed', 
   }}
 >
-      <div className="relative w-full h-[600px] overflow-hidden">
-        {featureImageList && featureImageList.length > 0
-          ? featureImageList.map((slide, index) => (
-              <img
-                src={slide?.image}
-                key={index}
-                className={`${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
-              />
-            ))
-          : null}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) =>
-                (prevSlide - 1 + featureImageList.length) %
-                featureImageList.length
-            )
-          }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
-        >
-          <ChevronLeftIcon className="w-4 h-4" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() =>
-            setCurrentSlide(
-              (prevSlide) => (prevSlide + 1) % featureImageList.length
-            )
-          }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
-        >
-          <ChevronRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
+<div className="relative w-full h-[600px] overflow-hidden">
+      {featureImageList && featureImageList.length > 0
+        ? featureImageList.map((slide, index) => (
+            <div
+              key={index}
+              className={`${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              } absolute top-0 left-0 w-full h-full transition-opacity duration-1000`}
+            >
+             {loading && (
+  <div className="flex justify-center items-center w-full h-full bg-white/50">
+    <CircularProgress color="primary" size={40} thickness={4} />
+  </div>
+)}
+<img
+  src={slide?.image}
+  onLoad={() => setLoading(false)}
+  alt={`Slide ${index + 1}`}
+  className="w-full h-full object-cover"
+  style={{ display: loading ? "none" : "block" }}
+/>
+            </div>
+          ))
+        : null}
+     <Button
+  variant="outlined"
+  size="small"
+  onClick={() =>
+    setCurrentSlide(
+      (prevSlide) =>
+        (prevSlide - 1 + featureImageList.length) % featureImageList.length
+    )
+  }
+  className="absolute top-1/2 left-4 transform -translate-y-1/2 chevron-button"
+>
+  <ChevronLeftIcon />
+</Button>
+
+<Button
+  variant="outlined"
+  size="small"
+  onClick={() =>
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % featureImageList.length)
+  }
+  className="absolute top-1/2 right-4 transform -translate-y-1/2 chevron-button button-white-border"
+>
+  <ChevronRightIcon />
+</Button>
+
+
+    </div>
 
       <section className="py-12">
         <div className="container mx-auto px-4">
@@ -230,6 +245,7 @@ function ShoppingHome() {
             {productList && productList.length > 0
               ? productList.map((productItem) => (
                   <ShoppingProductTile
+                  key={productItem.id}
                     handleGetProductDetails={handleGetProductDetails}
                     product={productItem}
                     handleAddtoCart={handleAddtoCart}
@@ -245,10 +261,10 @@ function ShoppingHome() {
         productDetails={productDetails}
       />
 <a
-  href="https://wa.me/27762567775" // Directly include your WhatsApp number
+  href="https://wa.me/27762567775" 
   className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"
-  target="_blank" // Open in a new tab
-  rel="noopener noreferrer" // Security best practice
+  target="_blank" 
+  rel="noopener noreferrer" 
 >
   <WhatsAppIcon className="w-10 h-10 text-green-500" />
 </a>

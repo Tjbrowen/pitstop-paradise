@@ -36,19 +36,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   function handleRatingChange(getRating) {
     setRating(getRating);
   }
-
   function handleAddToCart(getCurrentProductId, getTotalStock) {
     const getCartItems = cartItems.items || [];
-  
-    // Check if the user is logged in
-    if (!user?.id) {
-      // User is not logged in, show a toast with a message in red
-      toast({
-        title: "You must be logged in to add products to your cart.",
-        variant: "destructive", // Destructive variant typically displays in red
-      });
-      return;
-    }
   
     const indexOfCurrentItem = getCartItems.findIndex(
       (item) => item.productId === getCurrentProductId && item.flavor === selectedFlavor
@@ -65,21 +54,46 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
     }
   
-    // If the user is logged in, proceed to add to cart via Redux and API
-    dispatch(
-      addToCart({
-        userId: user.id,
-        productId: getCurrentProductId,
-        quantity: 1,
-        flavor: selectedFlavor,
-      })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        dispatch(fetchCartItems(user.id));
-        toast({ title: "Product added to cart" });
+    if (user?.id) {
+      // User is logged in, proceed with Redux and API
+      dispatch(
+        addToCart({
+          userId: user.id,
+          productId: getCurrentProductId,
+          quantity: 1,
+          flavor: selectedFlavor,
+        })
+      ).then((data) => {
+        if (data?.payload?.success) {
+          dispatch(fetchCartItems(user.id));
+          toast({ title: "Product added to cart" });
+        }
+      });
+    } else {
+      // User is not logged in - store item in local storage
+      const guestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
+      const guestItemIndex = guestCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId && item.flavor === selectedFlavor
+      );
+  
+      if (guestItemIndex > -1) {
+        // Update quantity if item is already in the guest cart
+        guestCartItems[guestItemIndex].quantity += 1;
+      } else {
+        // Add new item if not in guest cart
+        guestCartItems.push({
+          productId: getCurrentProductId,
+          quantity: 1,
+          flavor: selectedFlavor,
+        });
       }
-    });
+  
+      localStorage.setItem("guestCart", JSON.stringify(guestCartItems));
+      toast({ title: "Product added to cart" });
+    }
   }
+  
+  
   
   
   

@@ -111,4 +111,27 @@
   border: 2px solid white;
 }
 
+/* index.css */
+.chevron-button {
+  background-color: #106692; 
+  color: white;
+  padding: 12px; 
+  border: none;
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  width: 48px; 
+  height: 48px; 
+}
+
+.chevron-button:hover {
+  background-color: #085f75; 
+}
+
+.chevron-button svg {
+  font-size: 24px; 
+}
+
 

@@ -48,10 +48,10 @@ function ShoppingOrders() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Order Date</TableHead>
-              <TableHead>Order Status</TableHead>
-              <TableHead>Order Price</TableHead>
+            <TableHead className="text-white">Order ID</TableHead>
+    <TableHead className="text-white">Order Date</TableHead>
+    <TableHead className="text-white">Order Status</TableHead>
+    <TableHead className="text-white">Order Price</TableHead>
               <TableHead>
                 <span className="sr-only">Details</span>
               </TableHead>
@@ -94,12 +94,12 @@ function ShoppingOrders() {
                         }}
                       >
                         <Button
-                          onClick={() =>
-                            handleFetchOrderDetails(orderItem?._id)
-                          }
-                        >
-                          View Details
-                        </Button>
+  onClick={() => handleFetchOrderDetails(orderItem?._id)}
+  className="border-2 border-white"
+>
+  View Details
+</Button>
+
                         <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>

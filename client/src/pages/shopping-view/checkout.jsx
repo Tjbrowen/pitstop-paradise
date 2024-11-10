@@ -7,6 +7,7 @@ import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { Navigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { CircularProgress } from "@mui/material";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -32,65 +33,81 @@ function ShoppingCheckout() {
         )
       : 0;
 
-  function handleInitiatePaypalPayment() {
-    if (cartItems.length === 0) {
-      toast({
-        title: "Your cart is empty. Please add items to proceed",
-        variant: "destructive",
-      });
-
-      return;
-    }
-    if (currentSelectedAddress === null) {
-      toast({
-        title: "Please select one address to proceed.",
-        variant: "destructive",
-      });
-
-      return;
-    }
-
-    const orderData = {
-      userId: user?.id,
-      cartId: cartItems?._id,
-      cartItems: cartItems.items.map((singleCartItem) => ({
-        productId: singleCartItem?.productId,
-        title: singleCartItem?.title,
-        image: singleCartItem?.image,
-        price:
-          singleCartItem?.salePrice > 0
-            ? singleCartItem?.salePrice
-            : singleCartItem?.price,
-        quantity: singleCartItem?.quantity,
-      })),
-      addressInfo: {
-        addressId: currentSelectedAddress?._id,
-        address: currentSelectedAddress?.address,
-        city: currentSelectedAddress?.city,
-        postcode: currentSelectedAddress?.postcode,
-        phone: currentSelectedAddress?.phone,
-        notes: currentSelectedAddress?.notes,
-        email: user?.email,
-      },
-      orderStatus: "pending",
-      paymentMethod: "paypal",
-      paymentStatus: "pending",
-      totalAmount: totalCartAmount,
-      orderDate: new Date(),
-      orderUpdateDate: new Date(),
-      paymentId: "",
-      payerId: "",
-    };
-
-    dispatch(createNewOrder(orderData)).then((data) => {
-     
-      if (data?.payload?.success) {
+      function handleInitiatePaypalPayment() {
+        if (cartItems.length === 0) {
+          toast({
+            title: "Your cart is empty. Please add items to proceed",
+            variant: "destructive",
+          });
+      
+          return;
+        }
+        if (currentSelectedAddress === null) {
+          toast({
+            title: "Please select one address to proceed.",
+            variant: "destructive",
+          });
+      
+          return;
+        }
+      
+        // Set loading state immediately after clicking the button
         setIsPaymemntStart(true);
-      } else {
-        setIsPaymemntStart(false);
+      
+        const orderData = {
+          userId: user?.id,
+          cartId: cartItems?._id,
+          cartItems: cartItems.items.map((singleCartItem) => ({
+            productId: singleCartItem?.productId,
+            title: singleCartItem?.title,
+            image: singleCartItem?.image,
+            price:
+              singleCartItem?.salePrice > 0
+                ? singleCartItem?.salePrice
+                : singleCartItem?.price,
+            quantity: singleCartItem?.quantity,
+          })),
+          addressInfo: {
+            addressId: currentSelectedAddress?._id,
+            address: currentSelectedAddress?.address,
+            city: currentSelectedAddress?.city,
+            postcode: currentSelectedAddress?.postcode,
+            phone: currentSelectedAddress?.phone,
+            notes: currentSelectedAddress?.notes,
+            email: user?.email,
+          },
+          orderStatus: "pending",
+          paymentMethod: "paypal",
+          paymentStatus: "pending",
+          totalAmount: totalCartAmount,
+          orderDate: new Date(),
+          orderUpdateDate: new Date(),
+          paymentId: "",
+          payerId: "",
+        };
+      
+        // Dispatch async action
+        dispatch(createNewOrder(orderData)).then((data) => {
+          // Handle response and stop loader
+          if (data?.payload?.success) {
+            setIsPaymemntStart(false); 
+          } else {
+            setIsPaymemntStart(false); 
+            toast({
+              title: "Payment initiation failed. Please try again.",
+              variant: "destructive",
+            });
+          }
+        }).catch((error) => {
+          // Handle errors and stop loader
+          setIsPaymemntStart(false);
+          toast({
+            title: "An error occurred. Please try again.",
+            variant: "destructive",
+          });
+        });
       }
-    });
-  }
+      
 
   if (approvalURL) {
     window.location.href = approvalURL;
@@ -131,9 +148,15 @@ function ShoppingCheckout() {
           <Button
   onClick={handleInitiatePaypalPayment}
   className="w-full button-white-border"
+  disabled={isPaymentStart} 
 >
-  {isPaymentStart ? "Processing Paypal Payment..." : "Checkout with Paypal"}
+  {isPaymentStart ? (
+    <CircularProgress color="success" size={24} />
+  ) : (
+    "Checkout with Paypal"
+  )}
 </Button>
+
           </div>
         </div>
       </div>
