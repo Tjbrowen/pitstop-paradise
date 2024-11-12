@@ -139,18 +139,18 @@ function ShoppingHome() {
                 index === currentSlide ? "opacity-100" : "opacity-0"
               } absolute top-0 left-0 w-full h-full transition-opacity duration-1000`}
             >
-             {loading && (
-  <div className="flex justify-center items-center w-full h-full bg-white/50">
-    <CircularProgress color="primary" size={40} thickness={4} />
-  </div>
-)}
-<img
-  src={slide?.image}
-  onLoad={() => setLoading(false)}
-  alt={`Slide ${index + 1}`}
-  className="w-full h-full object-cover"
-  style={{ display: loading ? "none" : "block" }}
-/>
+              {loading && (
+                <div className="flex justify-center items-center w-full h-full bg-white/50">
+                  <CircularProgress />
+                </div>
+              )}
+              <img
+                src={slide?.image}
+                onLoad={() => setLoading(false)}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover"
+                style={{ display: loading ? "none" : "block" }}
+              />
             </div>
           ))
         : null}

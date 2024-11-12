@@ -36,6 +36,7 @@ import ContactUs from "./pages/shopping-view/contact";
 import { Toaster } from "react-hot-toast";
 import ShopMore from "./pages/shopping-view/shop-more";
 import AgeVerification from "./pages/shopping-view/age-verification";
+import About from "./pages/shopping-view/about";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -83,6 +84,7 @@ function App() {
             <Route path="policies" element={<Policies />} />
             <Route path="contact" element={<ContactUs />} />
             <Route path="shop-more" element={<ShopMore />} />
+            <Route path="about" element={<About />} />
           </Route>
 
           {/* Auth routes */}

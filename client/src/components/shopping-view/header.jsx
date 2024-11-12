@@ -166,7 +166,7 @@ function ShoppingHeader() {
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
-      className="sticky top-0 z-40 w-full border-b"
+      className="sticky top-0 z-40 w-full "
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black opacity-80"></div>

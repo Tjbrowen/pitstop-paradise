@@ -5,6 +5,7 @@ import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress from MUI
 
 const initialState = {
   email: "",
@@ -13,14 +14,18 @@ const initialState = {
 
 function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
+  const [loading, setLoading] = useState(false); // Add loading state
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   function onSubmit(event) {
     event.preventDefault();
+    setLoading(true); // Start loading when form submits
 
     dispatch(loginUser(formData)).then((data) => {
+      setLoading(false); // Stop loading after request completes
+
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
@@ -54,24 +59,22 @@ function AuthLogin() {
       </div>
       <CommonForm
         formControls={loginFormControls}
-        buttonText={"Sign In"}
+        buttonText={loading ? <CircularProgress size={24} /> : "Sign In"} // Show loader if loading
         formData={formData}
         setFormData={setFormData}
         onSubmit={onSubmit}
       />
       <div className="text-center">
-      <Link
-  className="font-medium hover:underline"
-  to="/auth/forgot-password"
-  style={{ color: '#007bff' }}  
->
-  Forgot your password?
-</Link>
-
+        <Link
+          className="font-medium hover:underline"
+          to="/auth/forgot-password"
+          style={{ color: '#007bff' }}  
+        >
+          Forgot your password?
+        </Link>
       </div>
     </div>
   );
 }
 
 export default AuthLogin;
-
