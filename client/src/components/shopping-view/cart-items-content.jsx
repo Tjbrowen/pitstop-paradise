@@ -71,7 +71,7 @@ function UserCartItemsContent({ cartItem }) {
   }
 
   // Log the selected flavor
-  console.log("Selected Flavor:", cartItem?.selectedFlavor);
+  console.log("Selected Flavor:", cartItem);
 
   return (
     <div className="flex items-center space-x-4">
