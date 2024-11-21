@@ -4,21 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { createNewOrder } from "@/store/shop/order-slice";
-import { Navigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
   const { approvalURL } = useSelector((state) => state.shopOrder);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
-  const [isPaymentStart, setIsPaymemntStart] = useState(false);
+  const [shippingCost, setShippingCost] = useState(0);
+  const [isPaymentStart, setIsPaymentStart] = useState(false);
+
   const dispatch = useDispatch();
   const { toast } = useToast();
-
-  console.log(currentSelectedAddress, "cartItems");
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0
@@ -30,84 +29,92 @@ function ShoppingCheckout() {
               : currentItem?.price) *
               currentItem?.quantity,
           0
-        )
+        ) + shippingCost
       : 0;
 
-      function handleInitiatePaypalPayment() {
-        if (cartItems.length === 0) {
-          toast({
-            title: "Your cart is empty. Please add items to proceed",
-            variant: "destructive",
-          });
-      
-          return;
-        }
-        if (currentSelectedAddress === null) {
-          toast({
-            title: "Please select one address to proceed.",
-            variant: "destructive",
-          });
-      
-          return;
-        }
-      
-        // Set loading state immediately after clicking the button
-        setIsPaymemntStart(true);
-      
-        const orderData = {
-          userId: user?.id,
-          cartId: cartItems?._id,
-          cartItems: cartItems.items.map((singleCartItem) => ({
-            productId: singleCartItem?.productId,
-            title: singleCartItem?.title,
-            image: singleCartItem?.image,
-            price:
-              singleCartItem?.salePrice > 0
-                ? singleCartItem?.salePrice
-                : singleCartItem?.price,
-            quantity: singleCartItem?.quantity,
-          })),
-          addressInfo: {
-            addressId: currentSelectedAddress?._id,
-            address: currentSelectedAddress?.address,
-            city: currentSelectedAddress?.city,
-            postcode: currentSelectedAddress?.postcode,
-            phone: currentSelectedAddress?.phone,
-            notes: currentSelectedAddress?.notes,
-            email: user?.email,
+  async function handleCheckout() {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Your cart is empty. Please add items to proceed",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!currentSelectedAddress) {
+      toast({
+        title: "Please select an address to proceed.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (shippingCost === 0) {
+      toast({
+        title: "Please select a shipping method.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsPaymentStart(true);
+
+    const orderData = {
+      userId: user?.id,
+      cartItems: cartItems.items.map((item) => ({
+        productId: item?.productId,
+        title: item?.title,
+        image: item?.image,
+        price: item?.salePrice > 0 ? item?.salePrice : item?.price,
+        quantity: item?.quantity,
+      })),
+      addressInfo: {
+        addressId: currentSelectedAddress?._id,
+        address: currentSelectedAddress?.address,
+        city: currentSelectedAddress?.city,
+        postcode: currentSelectedAddress?.postcode,
+        phone: currentSelectedAddress?.phone,
+        notes: currentSelectedAddress?.notes,
+        email: user?.email,
+      },
+      orderStatus: "pending",
+      paymentMethod: "invoice",
+      shippingCost: shippingCost,
+      totalAmount: totalCartAmount,
+      orderDate: new Date(),
+      orderUpdateDate: new Date(),
+    };
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/create-order`,
+        orderData
+      );
+
+      setIsPaymentStart(false);
+
+      if (response.data.success) {
+        toast({
+          title: "Order placed! Invoice sent via email.",
+          variant: "success",
+          style: {
+            backgroundColor: "#28a745",
+            color: "white",
           },
-          orderStatus: "pending",
-          paymentMethod: "paypal",
-          paymentStatus: "pending",
-          totalAmount: totalCartAmount,
-          orderDate: new Date(),
-          orderUpdateDate: new Date(),
-          paymentId: "",
-          payerId: "",
-        };
-      
-        // Dispatch async action
-        dispatch(createNewOrder(orderData)).then((data) => {
-          // Handle response and stop loader
-          if (data?.payload?.success) {
-            setIsPaymemntStart(false); 
-          } else {
-            setIsPaymemntStart(false); 
-            toast({
-              title: "Payment initiation failed. Please try again.",
-              variant: "destructive",
-            });
-          }
-        }).catch((error) => {
-          // Handle errors and stop loader
-          setIsPaymemntStart(false);
-          toast({
-            title: "An error occurred. Please try again.",
-            variant: "destructive",
-          });
+        });
+      } else {
+        toast({
+          title: "Order failed. Please try again.",
+          variant: "destructive",
         });
       }
-      
+    } catch (error) {
+      setIsPaymentStart(false);
+      toast({
+        title: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Error in handleCheckout:", error.response || error.message || error);
+    }
+  }
 
   if (approvalURL) {
     window.location.href = approvalURL;
@@ -115,15 +122,15 @@ function ShoppingCheckout() {
 
   return (
     <div
-    className="flex flex-col min-h-screen"
-    style={{
-      backgroundImage: `url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-      backgroundAttachment: "fixed",
-    }}
-  >
+      className="flex flex-col min-h-screen"
+      style={{
+        backgroundImage: `url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div className="relative h-[300px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
@@ -138,6 +145,31 @@ function ShoppingCheckout() {
                 <UserCartItemsContent cartItem={item} />
               ))
             : null}
+
+          {/* Shipping Options */}
+          <div className="flex flex-col gap-2 mb-4">
+            <label className="flex items-center text-white">
+              <input
+                type="radio"
+                value="130"
+                checked={shippingCost === 140}
+                onChange={() => setShippingCost(140)}
+                className="mr-2"
+              />
+              Overnight Courier <span className="ml-2 font-bold">R140</span>
+            </label>
+            <label className="flex items-center text-white">
+              <input
+                type="radio"
+                value="90"
+                checked={shippingCost === 100}
+                onChange={() => setShippingCost(100)}
+                className="mr-2"
+              />
+              Economy Road <span className="ml-2 font-bold">R100</span>
+            </label>
+          </div>
+
           <div className="mt-8 space-y-4">
             <div className="flex justify-between">
               <span className="font-bold text-white">Total</span>
@@ -145,18 +177,17 @@ function ShoppingCheckout() {
             </div>
           </div>
           <div className="mt-4 w-full">
-          <Button
-  onClick={handleInitiatePaypalPayment}
-  className="w-full button-white-border"
-  disabled={isPaymentStart} 
->
-  {isPaymentStart ? (
-    <CircularProgress color="success" size={24} />
-  ) : (
-    "Checkout with Paypal"
-  )}
-</Button>
-
+            <Button
+              onClick={handleCheckout}
+              disabled={isPaymentStart || shippingCost === 0}
+              className="w-full button-white-border"
+            >
+              {isPaymentStart ? (
+                <CircularProgress color="success" size={24} />
+              ) : (
+                "Checkout & Generate Invoice"
+              )}
+            </Button>
           </div>
         </div>
       </div>

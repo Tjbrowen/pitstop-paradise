@@ -132,7 +132,10 @@ function AdminProducts() {
         <SheetContent side="right" className="overflow-auto">
           <SheetHeader>
             <SheetTitle>
-              {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+            <span style={{ color: "white" }}>
+  {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+</span>
+
             </SheetTitle>
           </SheetHeader>
           <ProductImageUpload

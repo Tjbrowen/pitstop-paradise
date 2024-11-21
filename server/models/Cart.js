@@ -19,6 +19,10 @@ const CartSchema = new mongoose.Schema(
           required: true,
           min: 1,
         },
+        selectedFlavor: {
+          type: String,
+          required: false, 
+        },
       },
     ],
   },

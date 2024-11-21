@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-
+import FacebookIcon from '@mui/icons-material/Facebook';
 
 import {
  
@@ -80,7 +80,7 @@ function ShoppingHome() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-        selectedFlavor,
+        flavor: selectedFlavor,
       })
     ).then((data) => {
       if (data?.payload?.success) {
@@ -260,6 +260,16 @@ function ShoppingHome() {
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
       />
+
+<a
+  href="https://www.facebook.com/YourFacebookPage" 
+  className="fixed bottom-36 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"
+  target="_blank" 
+  rel="noopener noreferrer" 
+>
+  <FacebookIcon className="w-10 h-10 text-blue-600" />
+</a>
+
 <a
   href="https://wa.me/27762567775" 
   className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"

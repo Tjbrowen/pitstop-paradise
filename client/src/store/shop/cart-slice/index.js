@@ -2,31 +2,34 @@ import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-  cartItems: JSON.parse(localStorage.getItem("guestCart")) || [], // Initialize with localStorage for guest
+  cartItems: JSON.parse(localStorage.getItem("guestCart")) || [], 
   isLoading: false,
 };
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ userId, productId, flavor, quantity }, { rejectWithValue }) => {
+  async ({ userId, productId, flavor = "default", quantity }, { rejectWithValue }) => {
     console.log("Adding to cart:", { userId, productId, flavor, quantity });
+
     try {
       const response = await axios.post(
         "http://localhost:5000/api/shop/cart/add",
         { userId, productId, quantity, flavor }
       );
-      
-      // Update the guest cart in localStorage if not logged in
+
       if (!userId) {
-        const updatedCart = response.data.data; // Get the updated cart from API
+        // For guest users, store the updated cart in localStorage
+        const updatedCart = response.data.data.map(item => ({
+          ...item,
+          selectedFlavor: item.selectedFlavor || flavor, 
+        }));
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
       }
 
-      console.log("API response data:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error adding to cart:", error.response.data);
-      return rejectWithValue(error.response.data);
+      console.error("Error adding to cart:", error.response?.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -58,20 +61,21 @@ export const fetchGuestCartItems = createAsyncThunk(
 
 export const deleteCartItem = createAsyncThunk(
   "cart/deleteCartItem",
-  async ({ userId, productId }, { rejectWithValue }) => {
+  async ({ userId, productId, flavor }, { rejectWithValue }) => {
     try {
-      // For logged-in users, call the API
       if (userId) {
         const response = await axios.delete(
           `http://localhost:5000/api/shop/cart/${userId}/${productId}`
         );
         return response.data;
       } else {
-        // For guests, remove the item from localStorage
+        // For guests, remove item based on both productId and flavor
         const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
-        const updatedCart = guestCart.filter(item => item.productId !== productId);
+        const updatedCart = guestCart.filter(
+          item => item.productId !== productId || item.selectedFlavor !== flavor
+        );
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
-        return { data: updatedCart };  // Return updated guest cart
+        return { data: updatedCart }; // Return updated guest cart
       }
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -82,23 +86,24 @@ export const deleteCartItem = createAsyncThunk(
 
 export const updateCartQuantity = createAsyncThunk(
   "cart/updateCartQuantity",
-  async ({ userId, productId, quantity }, { rejectWithValue }) => {
+  async ({ userId, productId, quantity, flavor }, { rejectWithValue }) => {
     try {
-      // For logged-in users, call the API
       if (userId) {
         const response = await axios.put(
           "http://localhost:5000/api/shop/cart/update-cart",
-          { userId, productId, quantity }
+          { userId, productId, quantity, flavor }
         );
         return response.data;
       } else {
-        // For guests, update the quantity in localStorage
+        // For guest users, update the quantity and flavor in localStorage
         const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
         const updatedCart = guestCart.map(item =>
-          item.productId === productId ? { ...item, quantity } : item
+          item.productId === productId && item.selectedFlavor === flavor
+            ? { ...item, quantity }
+            : item
         );
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
-        return { data: updatedCart };  // Return updated guest cart
+        return { data: updatedCart }; 
       }
     } catch (error) {
       console.error("Error updating quantity:", error);
@@ -119,7 +124,7 @@ const shoppingCartSlice = createSlice({
       .addCase(addToCart.fulfilled, (state, action) => {
         state.isLoading = false;
         state.cartItems = action.payload.data;
-        // Update localStorage if the user is a guest
+        // Update localStorage for guest users if needed
         if (!action.payload.userId) {
           localStorage.setItem("guestCart", JSON.stringify(action.payload.data));
         }

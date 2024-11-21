@@ -35,10 +35,8 @@ function ProductImageUpload({
   }
 
   async function handleRemoveImage() {
-    
     if (uploadedImageUrl) {
       try {
-        
         await axios.delete(`http://localhost:5000/api/admin/products/delete-image`, {
           data: { url: uploadedImageUrl },
         });
@@ -77,7 +75,7 @@ function ProductImageUpload({
     <div
       className={`w-full mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
     >
-      <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
+      <Label className="text-lg font-semibold mb-2 block text-white">Upload Image</Label>
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -98,7 +96,7 @@ function ProductImageUpload({
             htmlFor="image-upload"
             className={`${
               isEditMode ? "cursor-not-allowed" : ""
-            } flex flex-col items-center justify-center h-32 cursor-pointer`}
+            } flex flex-col items-center justify-center h-32 cursor-pointer text-white`}
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
             <span>Drag & drop or click to upload image</span>
@@ -106,11 +104,11 @@ function ProductImageUpload({
         ) : imageLoadingState ? (
           <Skeleton className="h-10 bg-gray-100" />
         ) : (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between text-white">
             <div className="flex items-center">
-              <FileIcon className="w-8 text-primary mr-2 h-8" />
+              <FileIcon className="w-8 h-8 text-white mr-2" />
+              <p className="text-sm font-medium">{imageFile.name}</p>
             </div>
-            <p className="text-sm font-medium">{imageFile.name}</p>
             <Button
               variant="ghost"
               size="icon"

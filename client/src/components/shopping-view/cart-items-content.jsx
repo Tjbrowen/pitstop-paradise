@@ -26,8 +26,6 @@ function UserCartItemsContent({ cartItem }) {
         );
         const getTotalStock = productList[getCurrentProductIndex].totalStock;
 
-        console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
-
         if (indexOfCurrentCartItem > -1) {
           const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
           if (getQuantity + 1 > getTotalStock) {
@@ -45,6 +43,7 @@ function UserCartItemsContent({ cartItem }) {
       updateCartQuantity({
         userId: user?.id,
         productId: getCartItem?.productId,
+        flavor: cartItem.flavor, 
         quantity:
           typeOfAction === "plus"
             ? getCartItem?.quantity + 1
@@ -61,7 +60,7 @@ function UserCartItemsContent({ cartItem }) {
 
   function handleCartItemDelete(getCartItem) {
     dispatch(
-      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
+      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId, flavor: cartItem.flavor })
     ).then((data) => {
       if (data?.payload?.success) {
         toast({
@@ -71,6 +70,7 @@ function UserCartItemsContent({ cartItem }) {
     });
   }
 
+  // Log the selected flavor
   console.log("Selected Flavor:", cartItem?.selectedFlavor);
 
   return (
@@ -82,15 +82,15 @@ function UserCartItemsContent({ cartItem }) {
       />
       <div className="flex-1">
         <h3 className="font-extrabold text-white">{cartItem?.title}</h3>
-        {cartItem.selectedFlavor ? (
-    <p className="text-sm text-white">Flavor: {cartItem.selectedFlavor}</p>
-) : (
-    <p className="text-sm text-white">No flavor selected</p>
-)}
-
-     
-
         
+        {cartItem?.selectedFlavor ? (
+          <p className="text-sm text-gray-300">
+            Flavor: {cartItem.selectedFlavor}
+          </p>
+        ) : (
+          <p className="text-sm text-gray-300">Flavor: No Flavor Selected</p>
+        )}
+
         <div className="flex items-center gap-2 mt-1">
           <Button
             variant="outline"
@@ -130,7 +130,6 @@ function UserCartItemsContent({ cartItem }) {
       </div>
     </div>
   );
-  
 }
 
 UserCartItemsContent.propTypes = {
@@ -141,9 +140,8 @@ UserCartItemsContent.propTypes = {
     price: PropTypes.number.isRequired,
     salePrice: PropTypes.number,
     productId: PropTypes.string.isRequired,
-    selectedFlavor: PropTypes.string,
+    selectedFlavor: PropTypes.string, // Ensure consistency in flavor naming
   }).isRequired,
 };
 
 export default UserCartItemsContent;
-

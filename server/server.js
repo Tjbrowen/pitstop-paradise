@@ -20,6 +20,9 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 const { resetPassword, authMiddleware } = require("./controllers/auth/auth-controller"); 
 
 const sendOrderAlertEmail = require('./utils/sendOrderAlertEmail');
+const orderEmailService = require('./utils/orderEmailService');
+const path = require('path');
+
 
 mongoose.connect(
   'mongodb+srv://pitstopparadiseholdings:qTMk4wFkGC0S01Ad@cluster0.eehl7.mongodb.net/'
@@ -72,7 +75,7 @@ app.post('/api/auth/send-order-alert-email', async (req, res) => {
   }
 
   try {
-    await sendOrderAlertEmail({
+    await                            ({
       to: customerEmail,
       subject: 'Your Order Confirmation',
       orderDetails
@@ -84,6 +87,19 @@ app.post('/api/auth/send-order-alert-email', async (req, res) => {
   }
 });
  
+
+
+app.post('/api/create-order', async (req, res) => {
+    try {
+        await orderEmailService(req, res); 
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error in orderEmailService:", error);
+        res.status(500).json({ success: false, error: "Failed to process the order" });
+    }
+});
+
+app.use(express.static(path.join(__dirname, 'client', 'public')));
 
 app.use("/api/shop/products", shopProductsRouter);
 app.use("/api/shop/cart", shopCartRouter);

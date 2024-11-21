@@ -40,7 +40,6 @@ function CommonForm({
             }
           />
         );
-
         break;
       case "select":
         element = (
@@ -67,7 +66,6 @@ function CommonForm({
             </SelectContent>
           </Select>
         );
-
         break;
       case "textarea":
         element = (
@@ -84,14 +82,13 @@ function CommonForm({
             }
           />
         );
-
-      break;
+        break;
       case "multiselect":
         element = (
           <div>
             {getControlItem.options && getControlItem.options.length > 0
               ? getControlItem.options.map((optionItem) => (
-                  <div key={optionItem.id} className="flex items-center">
+                  <div key={optionItem.id} className="flex items-center text-white">
                     <input
                       type="checkbox"
                       id={optionItem.id}
@@ -124,9 +121,6 @@ function CommonForm({
           </div>
         );
         break;
-      
-      
-
       default:
         element = (
           <Input
@@ -154,19 +148,18 @@ function CommonForm({
       <div className="flex flex-col gap-3">
         {formControls.map((controlItem) => (
           <div className="grid w-full gap-1.5" key={controlItem.name}>
-            <Label className="mb-1">{controlItem.label}</Label>
+            <Label className="mb-1 text-white">{controlItem.label}</Label>
             {renderInputsByComponentType(controlItem)}
           </div>
         ))}
       </div>
       <Button
-  disabled={isBtnDisabled}
-  type="submit"
-  className="mt-2 w-full border-2 border-white text-white"
->
-  {buttonText || "Submit"}
-</Button>
-
+        disabled={isBtnDisabled}
+        type="submit"
+        className="mt-2 w-full border-2 border-white text-white"
+      >
+        {buttonText || "Submit"}
+      </Button>
     </form>
   );
 }
