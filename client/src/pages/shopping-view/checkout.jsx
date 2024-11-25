@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
+import { clearCart } from "@/store/shop/cart-slice";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -100,12 +101,16 @@ function ShoppingCheckout() {
             color: "white",
           },
         });
+
+        dispatch(clearCart());
+        console.log("Cart cleared after checkout.");
       } else {
         toast({
           title: "Order failed. Please try again.",
           variant: "destructive",
         });
       }
+
     } catch (error) {
       setIsPaymentStart(false);
       toast({

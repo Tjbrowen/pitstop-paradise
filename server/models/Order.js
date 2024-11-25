@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
-  userId: String,
-  cartId: String,
+  userId: { type: String, required: true },
+  cartId: { type: String, default: null },
   cartItems: [
     {
       productId: String,
@@ -21,12 +21,13 @@ const OrderSchema = new mongoose.Schema({
     notes: String,
     email: String,
   },
-  orderStatus: String,
+  orderStatus: { type: String, default: 'Pending' },
   paymentMethod: String,
   paymentStatus: String,
-  totalAmount: Number,
-  orderDate: Date,
-  orderUpdateDate: Date,
+  totalAmount: { type: Number, required: true },
+  shippingCost: { type: Number, required: true }, 
+  orderDate: { type: Date, default: Date.now }, 
+  orderUpdateDate: { type: Date, default: Date.now }, 
   paymentId: String,
   payerId: String,
 });

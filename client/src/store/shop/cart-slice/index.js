@@ -115,69 +115,70 @@ export const updateCartQuantity = createAsyncThunk(
 const shoppingCartSlice = createSlice({
   name: "shoppingCart",
   initialState,
-  reducers: {},
+  reducers: {
+    clearCart: (state) => {
+      state.cartItems = [];
+      localStorage.removeItem("guestCart"); // Clear guest cart
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(addToCart.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(addToCart.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.cartItems = action.payload.data;
-        // Update localStorage for guest users if needed
-        if (!action.payload.userId) {
-          localStorage.setItem("guestCart", JSON.stringify(action.payload.data));
-        }
-      })
-      .addCase(addToCart.rejected, (state) => {
-        state.isLoading = false;
-        state.cartItems = [];
-      })
-      .addCase(fetchCartItems.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchCartItems.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.cartItems = action.payload.data;
-      })
-      .addCase(fetchCartItems.rejected, (state) => {
-        state.isLoading = false;
-        state.cartItems = [];
-      })
-      .addCase(fetchGuestCartItems.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchGuestCartItems.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.cartItems = action.payload;
-      })
-      .addCase(fetchGuestCartItems.rejected, (state) => {
-        state.isLoading = false;
-        state.cartItems = [];
-      })
-      .addCase(updateCartQuantity.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateCartQuantity.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.cartItems = action.payload.data;
-      })
-      .addCase(updateCartQuantity.rejected, (state) => {
-        state.isLoading = false;
-        state.cartItems = [];
-      })
-      .addCase(deleteCartItem.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteCartItem.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.cartItems = action.payload.data;
-      })
-      .addCase(deleteCartItem.rejected, (state) => {
-        state.isLoading = false;
-        state.cartItems = [];
-      });
-  },
+    .addCase(addToCart.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(addToCart.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartItems = action.payload.data;
+      if (!action.payload.userId) {
+        localStorage.setItem("guestCart", JSON.stringify(action.payload.data));
+      }
+    })
+    .addCase(addToCart.rejected, (state) => {
+      state.isLoading = false;
+    })
+    .addCase(fetchCartItems.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(fetchCartItems.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartItems = action.payload.data;
+    })
+    .addCase(fetchCartItems.rejected, (state) => {
+      state.isLoading = false;
+    })
+    .addCase(fetchGuestCartItems.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(fetchGuestCartItems.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartItems = action.payload;
+    })
+    .addCase(fetchGuestCartItems.rejected, (state) => {
+      state.isLoading = false;
+    })
+    .addCase(deleteCartItem.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(deleteCartItem.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartItems = action.payload.data;
+    })
+    .addCase(deleteCartItem.rejected, (state) => {
+      state.isLoading = false;
+    })
+    .addCase(updateCartQuantity.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(updateCartQuantity.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.cartItems = action.payload.data;
+    })
+    .addCase(updateCartQuantity.rejected, (state) => {
+      state.isLoading = false;
+    });
+},
 });
 
+
+export const { clearCart } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;

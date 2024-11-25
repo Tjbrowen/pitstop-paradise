@@ -22,6 +22,8 @@ const { resetPassword, authMiddleware } = require("./controllers/auth/auth-contr
 const sendOrderAlertEmail = require('./utils/sendOrderAlertEmail');
 const orderEmailService = require('./utils/orderEmailService');
 const path = require('path');
+const Order = require('./models/Order');
+const { v4: uuidv4 } = require('uuid'); 
 
 
 mongoose.connect(
@@ -88,16 +90,77 @@ app.post('/api/auth/send-order-alert-email', async (req, res) => {
 });
  
 
-
 app.post('/api/create-order', async (req, res) => {
-    try {
-        await orderEmailService(req, res); 
-        res.json({ success: true });
-    } catch (error) {
-        console.error("Error in orderEmailService:", error);
-        res.status(500).json({ success: false, error: "Failed to process the order" });
+  try {
+    const orderData = req.body;
+
+    // Debugging: Log the received data
+    console.log('Received order data:', orderData);
+
+    const { userId, cartItems, shippingCost, totalAmount, addressInfo } = orderData;
+
+    if (!userId || !cartItems || !shippingCost || !totalAmount || !addressInfo) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: userId, cartItems, shippingCost, totalAmount, or addressInfo',
+      });
     }
+
+    const date = new Date();
+
+    // Create a new order document
+    const newOrder = new Order({
+      userId,
+      cartItems,
+      shippingCost,
+      totalAmount,
+      addressInfo,
+      orderStatus: 'Pending',
+      orderDate: date,
+      orderUpdateDate: date,
+    });
+
+    // Save the order to the database
+    const savedOrder = await newOrder.save();
+    console.log('Saved order in DB:', savedOrder);
+
+    // Send email notification with orderId
+    const result = await orderEmailService(orderData, savedOrder._id);
+
+    if (result.success) {
+      return res.json({
+        success: true,
+        message: 'Order placed and email sent successfully',
+        orderId: savedOrder._id,
+      });
+    } else {
+      return res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error('Unhandled error in /api/create-order:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Unexpected error occurred while processing the order.',
+    });
+  }
 });
+
+app.get('/api/shop/order/list/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const orders = await Order.find({ userId });
+    if (orders.length > 0) {
+      return res.json({ data: orders });
+    } else {
+      return res.status(404).json({ error: 'No orders found for this user' });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 
 app.use(express.static(path.join(__dirname, 'client', 'public')));
 

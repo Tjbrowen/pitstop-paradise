@@ -11,7 +11,8 @@ function ShoppingAccount() {
     style={{
       backgroundImage: "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
       backgroundSize: "cover",
-      backgroundPosition: "center"
+      backgroundPosition: "center",
+      height: "100vh",
     }}
   >
        <ShoppingHeader /> 
