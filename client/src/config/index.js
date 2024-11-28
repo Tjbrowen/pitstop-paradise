@@ -89,9 +89,9 @@ export const addProductFormElements = [
       { id: "airscream", label: "Airscream" },
       { id: "elfbar", label: "Elfbar" },
       { id: "nasty", label: "Nasty" },
-      { id: "fume", label: "Fume" },
+      { id: "juicekloud", label: "JuiceKloud" },
       { id: "airfuze", label: "Airfuze" },
-      { id: "ijoy", label: "IJOY" },
+      { id: "vuse", label: "Vuse" },
        { id: "cbd", label: "CBD" },
 
     ],
@@ -153,9 +153,9 @@ export const brandOptionsMap = {
   airscream: "Airscream",
   elfbar: "elfbar",
   nasty: "Nasty",
-  fume: "Fume",
+  juicekloud: "Juice Kloud",
   airfuze: "Airfuze",
-  ijoy: "Ijoy",
+  vuse: "Vuse",
   cbd: "CBD",
 };
 
@@ -171,9 +171,9 @@ export const filterOptions = {
     { id: "airscream", label: "Airscream" },
     { id: "elfbar", label: "Elfbar" },
     { id: "nasty", label: "Nasty" },
-    { id: "fume", label: "Fume" },
+    { id: "juicekloud", label: "Juice Kloud" },
     { id: "airfuze", label: "Airfuze" },
-    { id: "ijoy", label: "Ijoy" },
+    { id: "vuse", label: "Vuse" },
     { id: "cbd", label: "CBD" },
   ],
 };

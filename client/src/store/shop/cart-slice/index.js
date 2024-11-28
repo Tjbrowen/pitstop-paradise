@@ -21,7 +21,7 @@ export const addToCart = createAsyncThunk(
         // For guest users, store the updated cart in localStorage
         const updatedCart = response.data.data.map(item => ({
           ...item,
-          selectedFlavor: item.selectedFlavor || flavor, 
+          flavor: item.flavor || flavor,
         }));
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
       }
@@ -72,7 +72,7 @@ export const deleteCartItem = createAsyncThunk(
         // For guests, remove item based on both productId and flavor
         const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
         const updatedCart = guestCart.filter(
-          item => item.productId !== productId || item.selectedFlavor !== flavor
+          item => item.productId !== productId || item.flavor !== flavor
         );
         localStorage.setItem("guestCart", JSON.stringify(updatedCart));
         return { data: updatedCart }; // Return updated guest cart
@@ -98,7 +98,7 @@ export const updateCartQuantity = createAsyncThunk(
         // For guest users, update the quantity and flavor in localStorage
         const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
         const updatedCart = guestCart.map(item =>
-          item.productId === productId && item.selectedFlavor === flavor
+          item.productId === productId && item.flavor === flavor
             ? { ...item, quantity }
             : item
         );

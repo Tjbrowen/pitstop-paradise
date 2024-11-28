@@ -12,7 +12,7 @@ import { clearCart } from "@/store/shop/cart-slice";
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
-  const { approvalURL } = useSelector((state) => state.shopOrder);
+
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
   const [shippingCost, setShippingCost] = useState(0);
   const [isPaymentStart, setIsPaymentStart] = useState(false);
@@ -33,97 +33,106 @@ function ShoppingCheckout() {
         ) + shippingCost
       : 0;
 
-  async function handleCheckout() {
-    if (cartItems.length === 0) {
-      toast({
-        title: "Your cart is empty. Please add items to proceed",
-        variant: "destructive",
-      });
-      return;
-    }
-    if (!currentSelectedAddress) {
-      toast({
-        title: "Please select an address to proceed.",
-        variant: "destructive",
-      });
-      return;
-    }
-    if (shippingCost === 0) {
-      toast({
-        title: "Please select a shipping method.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsPaymentStart(true);
-
-    const orderData = {
-      userId: user?.id,
-      cartItems: cartItems.items.map((item) => ({
-        productId: item?.productId,
-        title: item?.title,
-        image: item?.image,
-        price: item?.salePrice > 0 ? item?.salePrice : item?.price,
-        quantity: item?.quantity,
-      })),
-      addressInfo: {
-        addressId: currentSelectedAddress?._id,
-        address: currentSelectedAddress?.address,
-        city: currentSelectedAddress?.city,
-        postcode: currentSelectedAddress?.postcode,
-        phone: currentSelectedAddress?.phone,
-        notes: currentSelectedAddress?.notes,
-        email: user?.email,
-      },
-      orderStatus: "pending",
-      paymentMethod: "invoice",
-      shippingCost: shippingCost,
-      totalAmount: totalCartAmount,
-      orderDate: new Date(),
-      orderUpdateDate: new Date(),
-    };
-
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/create-order`,
-        orderData
-      );
-
-      setIsPaymentStart(false);
-
-      if (response.data.success) {
-        toast({
-          title: "Order placed! Invoice sent via email.",
-          variant: "success",
-          style: {
-            backgroundColor: "#28a745",
-            color: "white",
+      async function handleCheckout() {
+        if (cartItems.length === 0) {
+          toast({
+            title: "Your cart is empty. Please add items to proceed",
+            variant: "destructive",
+          });
+          return;
+        }
+        if (!currentSelectedAddress) {
+          toast({
+            title: "Please select an address to proceed.",
+            variant: "destructive",
+          });
+          return;
+        }
+        if (shippingCost === 0) {
+          toast({
+            title: "Please select a shipping method.",
+            variant: "destructive",
+          });
+          return;
+        }
+      
+        // Check if each cart item has a selected flavor
+        for (const item of cartItems.items) {
+          if (!item?.flavor) {
+            toast({
+              title: `Please select a flavor for ${item?.title}.`,
+              variant: "destructive",
+            });
+            return;
+          }
+        }
+      
+        setIsPaymentStart(true);
+      
+        const orderData = {
+          userId: user?.id,
+          cartItems: cartItems.items.map((item) => ({
+            productId: item?.productId,
+            title: item?.title,
+            image: item?.image,
+            price: item?.salePrice > 0 ? item?.salePrice : item?.price,
+            quantity: item?.quantity,
+            flavor: item?.flavor,  // Use the actual selected flavor
+          })),
+          addressInfo: {
+            addressId: currentSelectedAddress?._id,
+            address: currentSelectedAddress?.address,
+            city: currentSelectedAddress?.city,
+            postcode: currentSelectedAddress?.postcode,
+            phone: currentSelectedAddress?.phone,
+            notes: currentSelectedAddress?.notes,
+            email: user?.email,
           },
-        });
-
-        dispatch(clearCart());
-        console.log("Cart cleared after checkout.");
-      } else {
-        toast({
-          title: "Order failed. Please try again.",
-          variant: "destructive",
-        });
+          orderStatus: "pending",
+          paymentMethod: "invoice",
+          shippingCost: shippingCost,
+          totalAmount: totalCartAmount,
+          orderDate: new Date(),
+          orderUpdateDate: new Date(),
+        };
+      
+        try {
+          const response = await axios.post(
+            `http://localhost:5000/api/create-order`,
+            orderData
+          );
+      
+          setIsPaymentStart(false);
+      
+          if (response.data.success) {
+            toast({
+              title: "Order placed! Invoice sent via email.",
+              variant: "success",
+              style: {
+                backgroundColor: "#28a745",
+                color: "white",
+              },
+            });
+      
+            dispatch(clearCart());
+            console.log("Cart cleared after checkout.");
+          } else {
+            toast({
+              title: "Order failed. Please try again.",
+              variant: "destructive",
+            });
+          }
+      
+        } catch (error) {
+          setIsPaymentStart(false);
+          toast({
+            title: "An error occurred. Please try again.",
+            variant: "destructive",
+          });
+          console.error("Error in handleCheckout:", error.response || error.message || error);
+        }
       }
-
-    } catch (error) {
-      setIsPaymentStart(false);
-      toast({
-        title: "An error occurred. Please try again.",
-        variant: "destructive",
-      });
-      console.error("Error in handleCheckout:", error.response || error.message || error);
-    }
-  }
-
-  if (approvalURL) {
-    window.location.href = approvalURL;
-  }
+      
 
   return (
     <div

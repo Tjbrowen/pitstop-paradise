@@ -83,7 +83,7 @@ function ShoppingListing() {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
-  function handleAddtoCart(getCurrentProductId, getTotalStock,selectedFlavor) {
+  function handleAddtoCart(getCurrentProductId, getTotalStock,flavor) {
     console.log(cartItems);
     let getCartItems = cartItems.items || [];
 
@@ -109,7 +109,7 @@ function ShoppingListing() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-        selectedFlavor,
+        flavor,
       })
     ).then((data) => {
       if (data?.payload?.success) {

@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, fetchCartItems, fetchGuestCartItems } from "@/store/shop/cart-slice";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
 import { setProductDetails } from "@/store/shop/products-slice";
 import { Label } from "../ui/label";
@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setRating] = useState(0);
-  const [selectedFlavor, setSelectedFlavor] = useState(productDetails?.flavor?.[0] || "");
+  const [flavor, setFlavor] = useState(productDetails?.flavor?.[0] || "");
 
   
   const dispatch = useDispatch();
@@ -27,10 +27,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
   const { toast } = useToast();
-  const handleFlavorChange = (value) => {
-    setSelectedFlavor(value);
-    console.log("Selected Flavor:", value);  
-  };
+  function handleFlavorChange(flavor) {
+    setFlavor(flavor);
+  }
   
 
 
@@ -43,13 +42,13 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     const getCartItems = cartItems.items || [];
     
     // If no flavor is selected, show an error
-    if (!selectedFlavor) {
+    if (!flavor) {
       toast({ title: "Please select a flavor before adding to cart", variant: "destructive" });
       return;
     }
   
     const indexOfCurrentItem = getCartItems.findIndex(
-      (item) => item.productId === getCurrentProductId && item.flavor === selectedFlavor
+      (item) => item.productId === getCurrentProductId && item.flavor === flavor
     );
   
     if (indexOfCurrentItem > -1) {
@@ -69,7 +68,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           userId: user.id,
           productId: getCurrentProductId,
           quantity: 1,
-          flavor: selectedFlavor,
+          flavor: flavor,
         })
       ).then((data) => {
         if (data?.payload?.success) {
@@ -80,7 +79,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     } else {
       const guestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
       const guestItemIndex = guestCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId && item.flavor === selectedFlavor
+        (item) => item.productId === getCurrentProductId && item.flavor === flavor
       );
   
       if (guestItemIndex > -1) {
@@ -89,7 +88,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         guestCartItems.push({
           productId: getCurrentProductId,
           quantity: 1,
-          flavor: selectedFlavor,
+          flavor: flavor,
         });
       }
   
@@ -102,7 +101,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     dispatch(setProductDetails());
     setRating(0);
     setReviewMsg("");
-    setSelectedFlavor("");
+    setFlavor("");
   }
   function handleAddReview() {
     // Check if the user is logged in
@@ -145,9 +144,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }, [productDetails]);
 
   useEffect(() => {
-    console.log("Selected Flavor:", selectedFlavor);
+    console.log("Selected Flavor:", flavor);
     console.log("Product Details:", productDetails);
-  }, [selectedFlavor, productDetails]);
+  }, [flavor, productDetails]);
   
 
   const averageReview =
@@ -202,21 +201,28 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           <div className="mt-4">
   
           <select
-  value={selectedFlavor}
-  onChange={(e) => handleFlavorChange(e.target.value)} 
+  value={flavor || ""}
+  onChange={(e) => handleFlavorChange(e.target.value)}
   className="mt-2 border rounded p-2"
+  disabled={!productDetails?.flavor || productDetails.flavor.length === 0} // Disable if no flavors
 >
-  <option value="" disabled>Select a flavor</option>
-  {productDetails?.flavor?.length > 0 ? (
-    productDetails.flavor.map((flavor, index) => (
-      <option key={index} value={flavor}>
-        {flavor}
+  {productDetails?.flavor && productDetails.flavor.length > 0 ? (
+    <>
+      <option value="" disabled>
+        Select a flavor
       </option>
-    ))
+      {productDetails.flavor.map((flavorOption, index) => (
+        <option key={index} value={flavorOption}>
+          {flavorOption}
+        </option>
+      ))}
+    </>
   ) : (
-    <option disabled>No flavors available</option>
+    <option value="">No flavors available</option>
   )}
 </select>
+
+
 
 
 
@@ -233,15 +239,15 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               <Button
               className="w-full text-white bg-blue-500 hover:bg-green-500 cursor-pointer"
               style={{
-                backgroundColor: selectedFlavor ? '#3b82f6' : '#ccc',
+                backgroundColor: flavor ? '#3b82f6' : '#ccc',
                 transition: 'background-color 0.3s ease',
               }}
               onClick={() =>
                 handleAddToCart(productDetails?._id, productDetails?.totalStock)
               }
-              disabled={!selectedFlavor}
+              disabled={!flavor}
             >
-              {selectedFlavor ? "Add to Cart" : "Please Select a Flavor"}
+              {flavor ? "Add to Cart" : "Please Select a Flavor"}
             </Button>
             
             

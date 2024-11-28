@@ -36,8 +36,11 @@ function ShoppingOrders() {
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true);
   }, [orderDetails]);
-
-  console.log(orderDetails, "orderDetails");
+  const sortedOrderList = orderList
+  ? [...orderList].sort(
+      (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
+    )
+  : [];
 
   return (
     <Card>
@@ -58,8 +61,8 @@ function ShoppingOrders() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {orderList && orderList.length > 0
-              ? orderList.map((orderItem) => (
+          {sortedOrderList && sortedOrderList.length > 0
+              ? sortedOrderList.map((orderItem) => (
                   <TableRow key={orderItem?._id}>
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
@@ -74,8 +77,8 @@ function ShoppingOrders() {
                             ? "bg-yellow-500"
                             : orderItem?.orderStatus === "delivered"
                             ? "bg-blue-500"
-                            : orderItem?.orderStatus === "inProcess"
-                            ? "bg-orange-500"
+                            : orderItem?.orderStatus === "paid"
+                            ? "bg-green-500"
                             : orderItem?.orderStatus === "inShipping"
                             ? "bg-purple-500"
                             : "bg-black"
@@ -94,13 +97,17 @@ function ShoppingOrders() {
                         }}
                       >
                         <Button
-  onClick={() => handleFetchOrderDetails(orderItem?._id)}
-  className="border-2 border-white"
->
-  View Details
-</Button>
+                          onClick={() =>
+                            handleFetchOrderDetails(orderItem?._id)
+                          }
+                          className="border-2 border-white"
+                        >
+                          View Details
+                        </Button>
 
-                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
+                        <ShoppingOrderDetailsView
+                          orderDetails={orderDetails}
+                        />
                       </Dialog>
                     </TableCell>
                   </TableRow>

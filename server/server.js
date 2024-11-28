@@ -59,7 +59,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Authentication check route
 app.get('/api/auth/check-auth', authMiddleware, (req, res) => {
-  const user = req.user; // Access user from middleware
+  const user = req.user; 
   res.status(200).json({ message: 'Authenticated', user });
 });
 
@@ -159,6 +159,26 @@ app.get('/api/shop/order/list/:userId', async (req, res) => {
   }
 });
 
+app.get('/api/shop/order/details/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Find the order by ID
+    const order = await Order.findById(orderId);
+
+    if (order) {
+      return res.json({ success: true, data: order });
+    } else {
+      return res.status(404).json({ success: false, error: 'Order not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching order details:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+    });
+  }
+});
 
 
 

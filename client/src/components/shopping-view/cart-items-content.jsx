@@ -83,9 +83,9 @@ function UserCartItemsContent({ cartItem }) {
       <div className="flex-1">
         <h3 className="font-extrabold text-white">{cartItem?.title}</h3>
         
-        {cartItem?.selectedFlavor ? (
+        {cartItem?.flavor ? (
           <p className="text-sm text-gray-300">
-            Flavor: {cartItem.selectedFlavor}
+            Flavor: {cartItem.flavor}
           </p>
         ) : (
           <p className="text-sm text-gray-300">Flavor: No Flavor Selected</p>
@@ -140,7 +140,7 @@ UserCartItemsContent.propTypes = {
     price: PropTypes.number.isRequired,
     salePrice: PropTypes.number,
     productId: PropTypes.string.isRequired,
-    selectedFlavor: PropTypes.string, // Ensure consistency in flavor naming
+    flavor: PropTypes.string, // Ensure consistency in flavor naming
   }).isRequired,
 };
 

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import FacebookIcon from '@mui/icons-material/Facebook';
+
 
 import {
  
@@ -40,9 +40,9 @@ const brandsWithIcon = [
   { id: "airscream", label: "Airscream", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751495/airscream_ojsrf5.jpg" },
   { id: "elfbar", label: "Alfbar", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751136/elfbarlogo_k2slwf.webp" },
   { id: "nasty", label: "Nasty", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751691/NASTY_LOGO_rtmfkl.png" },
-  { id: "fume", label: "Fume", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728751845/fume-logo_ow7drb.webp" },
+  { id: "juicekloud", label: "Juice Kloud", iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1732719793/WhatsApp_Image_2024-11-13_at_15.01.01_bez7fy.jpg" },
   { id: "airfuze", label: "Airfuze",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1730301734/mega-menu-116147-logo-671865073_320x_bbfc8p.avif" },
-  { id: "ijoy", label: "Ijoy",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1728817442/Ijoy_yrgst9.png" },
+  { id: "vuse", label: "Vuse",  iconUrl: "https://res.cloudinary.com/daynaexaz/image/upload/v1732721460/WhatsApp_Image_2024-11-13_at_14.57.18_1_bxwyos.jpg" },
 ];
 function ShoppingHome() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -74,13 +74,13 @@ function ShoppingHome() {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
-  function handleAddtoCart(getCurrentProductId,selectedFlavor) {
+  function handleAddtoCart(getCurrentProductId,flavor) {
     dispatch(
       addToCart({
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-        flavor: selectedFlavor,
+        flavor: flavor,
       })
     ).then((data) => {
       if (data?.payload?.success) {
@@ -261,18 +261,10 @@ function ShoppingHome() {
         productDetails={productDetails}
       />
 
-<a
-  href="https://www.facebook.com/YourFacebookPage" 
-  className="fixed bottom-36 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"
-  target="_blank" 
-  rel="noopener noreferrer" 
->
-  <FacebookIcon className="w-10 h-10 text-blue-600" />
-</a>
 
 <a
   href="https://wa.me/27762567775" 
-  className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition"
+  className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition mb-8"
   target="_blank" 
   rel="noopener noreferrer" 
 >

@@ -40,6 +40,15 @@ const createOrder = async (req, res) => {
       cartId,
     } = req.body;
 
+    cartItems.forEach((item) => {
+      
+      if (!item.flavor || item.flavor.trim() === '') {
+        item.flavor = 'Default Flavor';
+      }
+    });
+    
+    console.log("Cart Items with Flavor:", cartItems);
+
     const subtotal = cartItems.reduce(
       (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
       0
@@ -75,8 +84,10 @@ const createOrder = async (req, res) => {
     doc.text(`Total: R${totalWithShipping.toFixed(2)}`, { align: "right" });
     cartItems.forEach((item) => {
       doc.text(
-        `${item.title} - Quantity: ${item.quantity}, Price: R${item.price}`
+        `${item.title} - Quantity: ${item.quantity}, Price: R${item.price}, Flavor: ${item.flavor}`
       );
+      
+      
     });
     doc.end();
 

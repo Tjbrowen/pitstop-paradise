@@ -83,7 +83,7 @@ function App() {
             <Route path="search" element={<SearchProducts />} />
             <Route path="policies" element={<Policies />} />
             <Route path="contact" element={<ContactUs />} />
-            <Route path="shop-more" element={<ShopMore />} />
+            <Route path="more-products" element={<ShopMore />} />
             <Route path="about" element={<About />} />
           </Route>
 

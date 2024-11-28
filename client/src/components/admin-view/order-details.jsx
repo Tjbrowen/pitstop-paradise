@@ -80,8 +80,8 @@ function AdminOrderDetailsView({ orderDetails }) {
       ? "bg-yellow-500"
       : orderDetails?.orderStatus === "delivered"
       ? "bg-blue-500"
-      : orderDetails?.orderStatus === "inProcess"
-      ? "bg-orange-500"
+      : orderDetails?.orderStatus === "Paid"
+      ? "bg-green-500"
       : orderDetails?.orderStatus === "inShipping"
       ? "bg-purple-500"
       : "bg-black"
@@ -133,7 +133,7 @@ function AdminOrderDetailsView({ orderDetails }) {
                 componentType: "select",
                 options: [
                   { id: "pending", label: "Pending" },
-                  { id: "inProcess", label: "In Process" },
+                  { id: "paid", label: "Paid" },
                   { id: "inShipping", label: "In Shipping" },
                   { id: "delivered", label: "Delivered" },
                   { id: "rejected", label: "Rejected" },

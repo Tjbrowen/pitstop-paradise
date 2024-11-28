@@ -6,7 +6,7 @@ const Product = require("../../models/Product");
 const addToCart = async (req, res) => {
   try {
     // Destructure and validate input data from request body
-    const { userId, productId, quantity, selectedFlavor, guestId } = req.body;
+    const { userId, productId, quantity, flavor, guestId } = req.body;
 
     // Validate required fields: either userId or guestId must be provided, and quantity must be positive
     if ((!userId && !guestId) || !productId || quantity <= 0) {
@@ -28,14 +28,13 @@ const addToCart = async (req, res) => {
       cart = new Cart({ userId: cartOwnerId, items: [] });
     }
 
-    // Find if the specific product with selectedFlavor already exists in the cart
     const productIndex = cart.items.findIndex(item => 
-      item.productId.toString() === productId && item.selectedFlavor === selectedFlavor
+      item.productId.toString() === productId && item.flavor === flavor
     );
 
     // If product with flavor exists, update the quantity; otherwise, add new item with selected flavor
     if (productIndex === -1) {
-      cart.items.push({ productId, quantity, selectedFlavor });
+      cart.items.push({ productId, quantity, flavor });
     } else {
       cart.items[productIndex].quantity += quantity;
     }
@@ -81,7 +80,7 @@ const fetchCartItems = async (req, res) => {
       price: item.productId.price,
       salePrice: item.productId.salePrice,
       quantity: item.quantity,
-      selectedFlavor: item.selectedFlavor,
+      flavor: item.flavor,
     }));
 
     res.status(200).json({ success: true, data: { ...cart._doc, items: populatedItems } });
@@ -93,7 +92,7 @@ const fetchCartItems = async (req, res) => {
 
 const updateCartItemQty = async (req, res) => {
   try {
-    const { userId, productId, quantity, selectedFlavor } = req.body;
+    const { userId, productId, quantity, flavor } = req.body;
 
     if (!userId || !productId || quantity <= 0) {
       return res.status(400).json({ success: false, message: "Invalid data provided!" });
@@ -105,7 +104,7 @@ const updateCartItemQty = async (req, res) => {
     }
 
     const findCurrentProductIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId && item.selectedFlavor === selectedFlavor
+      (item) => item.productId.toString() === productId && item.flavor === flavor
     );
 
     if (findCurrentProductIndex === -1) {
@@ -113,7 +112,7 @@ const updateCartItemQty = async (req, res) => {
     }
 
     cart.items[findCurrentProductIndex].quantity = quantity;
-    cart.items[findCurrentProductIndex].selectedFlavor = selectedFlavor
+    cart.items[findCurrentProductIndex].flavor = flavor
     await cart.save();
 
     await cart.populate({
@@ -128,7 +127,7 @@ const updateCartItemQty = async (req, res) => {
       price: item.productId ? item.productId.price : null,
       salePrice: item.productId ? item.productId.salePrice : null,
       quantity: item.quantity,
-      selectedFlavor: item.selectedFlavor, 
+      flavor: item.flavor, 
     }));
 
     res.status(200).json({
@@ -146,7 +145,7 @@ const updateCartItemQty = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
-    const { userId, productId, selectedFlavor } = req.params;
+    const { userId, productId, flavor } = req.params;
     if (!userId || !productId) {
       return res.status(400).json({ success: false, message: "Invalid data provided!" });
     }
@@ -161,7 +160,7 @@ const deleteCartItem = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      (item) => !(item.productId._id.toString() === productId && item.selectedFlavor === selectedFlavor)
+      (item) => !(item.productId._id.toString() === productId && item.flavor === flavor)
     );
 
     await cart.save();
@@ -178,7 +177,7 @@ const deleteCartItem = async (req, res) => {
       price: item.productId ? item.productId.price : null,
       salePrice: item.productId ? item.productId.salePrice : null,
       quantity: item.quantity,
-      selectedFlavor: item.selectedFlavor,
+      flavor: item.flavor,
     }));
 
     res.status(200).json({

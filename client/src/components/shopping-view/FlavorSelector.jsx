@@ -4,7 +4,7 @@ import axios from "axios";
 
 function FlavorSelector({ productId, onFlavorSelect }) {
     const [productDetails, setProductDetails] = useState(null);
-    const [selectedFlavor, setSelectedFlavor] = useState("");
+    const [flavor, setFlavor] = useState("");
 
     useEffect(() => {
         console.log("Fetching product details for ID:", productId); // Log productId
@@ -27,7 +27,7 @@ function FlavorSelector({ productId, onFlavorSelect }) {
 
     const handleFlavorChange = (e) => {
         const flavor = e.target.value;
-        setSelectedFlavor(flavor);
+        setFlavor(flavor);
         console.log("Selected flavor:", flavor); // Log the selected flavor
         onFlavorSelect(flavor); 
     };
@@ -36,7 +36,7 @@ function FlavorSelector({ productId, onFlavorSelect }) {
         <div className="mt-4">
             <Label>Select Flavor</Label>
             <select
-                value={selectedFlavor}
+                value={flavor}
                 onChange={handleFlavorChange}
                 className="w-full border border-gray-300 rounded-md p-2 mt-1"
                 disabled={!productDetails?.flavors?.length} 

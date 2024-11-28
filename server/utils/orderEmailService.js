@@ -16,7 +16,7 @@ const generateOrderConfirmationPDF = (orderData,orderId) => {
 
     // Correct logo path using path module to resolve the absolute path
     const logoPath = path.join(__dirname, '..', 'invoice', 'logo.png');
-    console.log('Logo file path:', logoPath); // Log the path to debug
+    console.log('Logo file path:', logoPath); 
 
     // Add the company logo (use local file path instead of URL)
     doc.image(logoPath, {
@@ -39,15 +39,17 @@ const generateOrderConfirmationPDF = (orderData,orderId) => {
 
     // Reference
   
-    const orderIdReference = orderId.toString().slice(0, 8); // Use first 8 characters of ObjectId
+    const orderIdReference = `INV-${orderId.toString().slice(- 8)}`; 
     doc.fontSize(12).fillColor('#FF0000').text(`Reference: ${orderIdReference}`, { align: 'left' });
     // Order details (cart items)
     doc.moveDown();
     if (orderData.cartItems && Array.isArray(orderData.cartItems)) {
       orderData.cartItems.forEach((item) => {
+        const flavorText = item.flavor || 'Not Specified'; // Handle missing flavor gracefully
         doc.fontSize(12).fillColor('#000000').text(`Product: ${item.title}`);
         doc.text(`Quantity: ${item.quantity}`);
         doc.text(`Price: R${item.price}`);
+        doc.text(`Flavor: ${flavorText}`);
         doc.moveDown();
       });
     } else {
