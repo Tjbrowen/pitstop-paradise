@@ -187,6 +187,15 @@ export const sortOptions = [
 ];
 
 export const addressFormControls = [
+
+  {
+    label: "Name",
+    name: "name",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your name ",
+  },
+ 
   {
     label: "Address",
     name: "address",

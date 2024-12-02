@@ -1,9 +1,9 @@
 import { AlignJustify } from "lucide-react";
 import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 function AdminHeader({ setOpen }) {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
 
   return (
     <header className="flex items-center justify-between px-4 py-3 bg-background border-b">

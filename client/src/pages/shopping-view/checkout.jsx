@@ -77,10 +77,11 @@ function ShoppingCheckout() {
             image: item?.image,
             price: item?.salePrice > 0 ? item?.salePrice : item?.price,
             quantity: item?.quantity,
-            flavor: item?.flavor,  // Use the actual selected flavor
+            flavor: item?.flavor,  
           })),
           addressInfo: {
             addressId: currentSelectedAddress?._id,
+            name: currentSelectedAddress?.name,
             address: currentSelectedAddress?.address,
             city: currentSelectedAddress?.city,
             postcode: currentSelectedAddress?.postcode,
