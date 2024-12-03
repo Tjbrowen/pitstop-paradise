@@ -5,7 +5,11 @@ const CartSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false, 
+    },
+    guestId: {
+      type: String,
+      required: false,
     },
     items: [
       {
@@ -21,7 +25,7 @@ const CartSchema = new mongoose.Schema(
         },
         flavor: {
           type: String,
-          required: false, 
+          required: false,
         },
       },
     ],

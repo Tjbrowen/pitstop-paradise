@@ -5,47 +5,54 @@ const Product = require("../../models/Product");
 
 const addToCart = async (req, res) => {
   try {
-    // Destructure and validate input data from request body
-    const { userId, productId, quantity, flavor, guestId } = req.body;
+    const { userId, guestId, productId, quantity, flavor } = req.body;
 
-    // Validate required fields: either userId or guestId must be provided, and quantity must be positive
-    if ((!userId && !guestId) || !productId || quantity <= 0) {
+    if ((!userId && !guestId) || !productId || isNaN(quantity) || quantity <= 0 || !flavor || typeof flavor !== 'string') {
       return res.status(400).json({ success: false, message: "Invalid data provided!" });
     }
 
-    // Check if the product exists
+    // Find the product to ensure it exists
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
 
-    // Identify the cart owner: either userId or guestId
+    // Determine the cart owner based on userId or guestId
     const cartOwnerId = userId || guestId;
-    
-    // Find or create a cart for the identified cart owner
-    let cart = await Cart.findOne({ userId: cartOwnerId });
+
+    // Find the cart for the user or guest
+    let cart = await Cart.findOne({
+      $or: [{ userId: cartOwnerId }, { guestId: cartOwnerId }],
+    });
+
+    // If no cart exists, create a new one for the user/guest
     if (!cart) {
-      cart = new Cart({ userId: cartOwnerId, items: [] });
+      cart = new Cart({
+        userId: userId || null,    // userId will be null if logged out
+        guestId: guestId || null,  // guestId is used if logged out
+        items: [],
+      });
     }
 
-    const productIndex = cart.items.findIndex(item => 
-      item.productId.toString() === productId && item.flavor === flavor
+    // Find the product in the cart
+    const productIndex = cart.items.findIndex(
+      (item) => item.productId.toString() === productId && item.flavor === flavor
     );
 
-    // If product with flavor exists, update the quantity; otherwise, add new item with selected flavor
+    // Add new product or update quantity
     if (productIndex === -1) {
       cart.items.push({ productId, quantity, flavor });
     } else {
       cart.items[productIndex].quantity += quantity;
     }
 
-    // Save the cart
+    // Save the updated cart
     await cart.save();
-    res.status(200).json({ success: true, data: cart });
 
+    res.status(200).json({ success: true, data: cart });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "Error" });
+    res.status(500).json({ success: false, message: "Error adding product to cart" });
   }
 };
 
@@ -146,13 +153,14 @@ const updateCartItemQty = async (req, res) => {
 const deleteCartItem = async (req, res) => {
   try {
     const { userId, productId, flavor } = req.params;
+
     if (!userId || !productId) {
       return res.status(400).json({ success: false, message: "Invalid data provided!" });
     }
 
     const cart = await Cart.findOne({ userId }).populate({
       path: "items.productId",
-      select: "image title price salePrice flavor",
+      select: "image title price salePrice",
     });
 
     if (!cart) {
@@ -160,15 +168,14 @@ const deleteCartItem = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      (item) => !(item.productId._id.toString() === productId && item.flavor === flavor)
+      (item) =>
+        !(
+          item.productId._id.toString() === productId &&
+          (flavor === undefined || item.flavor === flavor)
+        )
     );
 
     await cart.save();
-
-    await cart.populate({
-      path: "items.productId",
-      select: "image title price salePrice ",
-    });
 
     const populateCartItems = cart.items.map((item) => ({
       productId: item.productId ? item.productId._id : null,
@@ -188,8 +195,8 @@ const deleteCartItem = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Error" });
+    console.error("Error deleting cart item:", error.message || error);
+    res.status(500).json({ success: false, message: "Internal server error", error });
   }
 };
 

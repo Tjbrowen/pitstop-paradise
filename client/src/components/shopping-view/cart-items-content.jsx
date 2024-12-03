@@ -59,20 +59,24 @@ function UserCartItemsContent({ cartItem }) {
   }
 
   function handleCartItemDelete(getCartItem) {
-    dispatch(
-      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId, flavor: cartItem.flavor })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: "Cart item is deleted successfully",
-        });
-      }
-    });
+    if (!user) {
+      const updatedCartItems = cartItems.items.filter(
+        (item) => item.productId !== getCartItem.productId || item.flavor !== getCartItem.flavor
+      );
+      localStorage.setItem("guestCart", JSON.stringify(updatedCartItems));
+      dispatch(setCartItems({ items: updatedCartItems })); 
+      toast({ title: "Cart item deleted successfully" });
+    } else {
+      dispatch(
+        deleteCartItem({ userId: user?.id, productId: getCartItem?.productId, flavor: cartItem.flavor })
+      ).then((data) => {
+        if (data?.payload?.success) {
+          toast({ title: "Cart item deleted successfully" });
+        }
+      });
+    }
   }
-
-  // Log the selected flavor
-  console.log("Selected Flavor:", cartItem);
-
+  
   return (
     <div className="flex items-center space-x-4">
       <img

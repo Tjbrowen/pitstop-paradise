@@ -115,7 +115,10 @@ function ShoppingCheckout() {
               },
             });
       
+            // Clear the cart after a successful checkout
             dispatch(clearCart());
+            localStorage.removeItem("guestCart"); // Remove guest cart from local storage if it's a guest
+      
             console.log("Cart cleared after checkout.");
           } else {
             toast({
@@ -166,7 +169,7 @@ function ShoppingCheckout() {
             <label className="flex items-center text-white">
               <input
                 type="radio"
-                value="130"
+                value="140"
                 checked={shippingCost === 140}
                 onChange={() => setShippingCost(140)}
                 className="mr-2"
@@ -176,7 +179,7 @@ function ShoppingCheckout() {
             <label className="flex items-center text-white">
               <input
                 type="radio"
-                value="90"
+                value="100"
                 checked={shippingCost === 100}
                 onChange={() => setShippingCost(100)}
                 className="mr-2"

@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
@@ -38,6 +37,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   function handleRatingChange(getRating) {
     setRating(getRating);
   }
+
   function handleAddToCart(getCurrentProductId, getTotalStock) {
     const getCartItems = cartItems.items || [];
     
@@ -63,6 +63,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     }
   
     if (user?.id) {
+      // For logged-in users
       dispatch(
         addToCart({
           userId: user.id,
@@ -72,19 +73,26 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         })
       ).then((data) => {
         if (data?.payload?.success) {
-          dispatch(fetchCartItems(user.id));
+          dispatch(fetchCartItems(user.id));  // Fetch updated cart items after successful addition
           toast({ title: "Product added to cart" });
+        } else {
+          toast({ title: "Failed to add product to cart", variant: "destructive" });
         }
+      }).catch(() => {
+        toast({ title: "Error adding product to cart", variant: "destructive" });
       });
     } else {
+      // For guest users
       const guestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
       const guestItemIndex = guestCartItems.findIndex(
         (item) => item.productId === getCurrentProductId && item.flavor === flavor
       );
   
       if (guestItemIndex > -1) {
+        // Update the quantity if the item already exists
         guestCartItems[guestItemIndex].quantity += 1;
       } else {
+        // Add new product to guest cart
         guestCartItems.push({
           productId: getCurrentProductId,
           quantity: 1,
@@ -93,9 +101,25 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
       }
   
       localStorage.setItem("guestCart", JSON.stringify(guestCartItems));
+  
+      // Fetch updated cart from localStorage before dispatching Redux
+      const updatedGuestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
+  
+      // Synchronize Redux state with updated localStorage
+      dispatch(fetchCartItems()); // Assuming this function updates the Redux state from localStorage data
+  
       toast({ title: "Product added to cart" });
+  
+      // Optionally, verify cart contents
+      if (updatedGuestCartItems.some(item => item.productId === getCurrentProductId && item.flavor === flavor)) {
+        console.log("Product successfully added to guest cart:", updatedGuestCartItems);
+      } else {
+        console.error("Failed to add product to guest cart:", updatedGuestCartItems);
+      }
     }
   }
+  
+  
   function handleDialogClose() {
     setOpen(false);
     dispatch(setProductDetails());
@@ -223,12 +247,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 </select>
 
 
-
-
-
 </div>
-
-
 
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (

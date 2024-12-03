@@ -24,6 +24,7 @@ const orderEmailService = require('./utils/orderEmailService');
 const path = require('path');
 const Order = require('./models/Order');
 const { v4: uuidv4 } = require('uuid'); 
+const Cart = require('./models/Cart');
 
 
 mongoose.connect(
@@ -124,6 +125,16 @@ app.post('/api/create-order', async (req, res) => {
     const savedOrder = await newOrder.save();
     console.log('Saved order in DB:', savedOrder);
 
+    // Clear the cart after order is placed
+    if (userId) {
+      // Remove the cart items for the logged-in user
+      await Cart.deleteMany({ userId });
+      console.log(`Cleared cart for user ${userId}`);
+    } else {
+      // For guest users, handle clearing the cart in the frontend (using localStorage or similar)
+      console.log('Clearing cart for guest user');
+    }
+
     // Send email notification with orderId
     const result = await orderEmailService(orderData, savedOrder._id);
 
@@ -163,7 +174,7 @@ app.get('/api/shop/order/details/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
 
-    // Find the order by ID
+
     const order = await Order.findById(orderId);
 
     if (order) {
