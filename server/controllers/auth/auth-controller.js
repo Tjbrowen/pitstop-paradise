@@ -18,7 +18,7 @@ const registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 12);
-    console.log("Generated Hashed Password:", hashPassword);
+    
     const newUser = new User({
       userName,
       email,
@@ -26,13 +26,13 @@ const registerUser = async (req, res) => {
     });
 
     await newUser.save();
-    console.log("User registered successfully:", newUser); 
+    
     res.status(201).json({
       success: true,
       message: "Registration successful",
     });
   } catch (e) {
-    console.error("Error: ", e);
+   
     res.status(500).json({
       success: false,
       message: "An error occurred during registration",
@@ -43,7 +43,7 @@ const registerUser = async (req, res) => {
 // Login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-console.log('logins => ', req.body)
+
   if (!email || !password) {
     return res.status(400).json({
       success: false,

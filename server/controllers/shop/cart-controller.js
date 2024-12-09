@@ -5,81 +5,95 @@ const Product = require("../../models/Product");
 
 const addToCart = async (req, res) => {
   try {
-    const { userId, guestId, productId, quantity, flavor } = req.body;
+    const { userId, productId, quantity, flavor } = req.body;
 
-    if ((!userId && !guestId) || !productId || isNaN(quantity) || quantity <= 0 || !flavor || typeof flavor !== 'string') {
+    // Validate required fields
+    if (!userId || !productId || isNaN(quantity) || quantity <= 0 || !flavor) {
       return res.status(400).json({ success: false, message: "Invalid data provided!" });
     }
 
-    // Find the product to ensure it exists
+    // Find the product by its ID
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
 
-    // Determine the cart owner based on userId or guestId
-    const cartOwnerId = userId || guestId;
+    
+   
 
-    // Find the cart for the user or guest
-    let cart = await Cart.findOne({
-      $or: [{ userId: cartOwnerId }, { guestId: cartOwnerId }],
-    });
+    // Attempt to find an existing cart for the user
+    let cart = await Cart.findOne({ userId });
 
-    // If no cart exists, create a new one for the user/guest
+    // Log query result for debugging
+   
+
+    
     if (!cart) {
+    
       cart = new Cart({
-        userId: userId || null,    // userId will be null if logged out
-        guestId: guestId || null,  // guestId is used if logged out
-        items: [],
+        userId,
+        items: [{ productId, quantity, flavor }],
       });
-    }
-
-    // Find the product in the cart
-    const productIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId && item.flavor === flavor
-    );
-
-    // Add new product or update quantity
-    if (productIndex === -1) {
-      cart.items.push({ productId, quantity, flavor });
     } else {
-      cart.items[productIndex].quantity += quantity;
+      // Find the product in the cart and update the quantity if it exists
+      const productIndex = cart.items.findIndex(item => item.productId.toString() === productId && item.flavor === flavor);
+      if (productIndex === -1) {
+      
+        cart.items.push({ productId, quantity, flavor });
+      } else {
+       
+        cart.items[productIndex].quantity += quantity;
+      }
     }
 
-    // Save the updated cart
-    await cart.save();
+    // Save the cart after making modifications
+    try {
+      await cart.save();
+     
+    } catch (saveError) {
+      
+      return res.status(500).json({ success: false, message: "Failed to save cart" });
+    }
 
+    // Send the updated cart as a response
     res.status(200).json({ success: true, data: cart });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error adding product to cart" });
+   
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
 
 const fetchCartItems = async (req, res) => {
   try {
     const { userId, guestId } = req.params;
 
+    // Validate input
     if (!userId && !guestId) {
-      const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
-      return res.status(200).json({ success: true, data: guestCart });
+      return res.status(400).json({ success: false, message: "No userId or guestId provided." });
     }
 
-    const cart = await Cart.findOne({ userId: userId || guestId }).populate({
+    const query = userId ? { userId } : { guestId };
+
+    // Fetch cart with populated product details
+    const cart = await Cart.findOne(query).populate({
       path: "items.productId",
       select: "image title price salePrice flavor",
     });
 
     if (!cart) {
-      return res.status(404).json({ success: false, message: "Cart not found!" });
+      return res.status(404).json({ success: false, message: "Cart not found." });
     }
 
+    // Filter invalid items and save the cart
     const validItems = cart.items.filter(item => item.productId);
     if (validItems.length < cart.items.length) {
       cart.items = validItems;
       await cart.save();
     }
 
+    // Format items for the response
     const populatedItems = validItems.map(item => ({
       productId: item.productId._id,
       image: item.productId.image,
@@ -92,10 +106,11 @@ const fetchCartItems = async (req, res) => {
 
     res.status(200).json({ success: true, data: { ...cart._doc, items: populatedItems } });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Error" });
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ success: false, message: "Internal server error.", error: error.message });
   }
 };
+
 
 const updateCartItemQty = async (req, res) => {
   try {
@@ -145,7 +160,7 @@ const updateCartItemQty = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+
     res.status(500).json({ success: false, message: "Error" });
   }
 };

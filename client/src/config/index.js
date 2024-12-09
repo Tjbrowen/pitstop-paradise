@@ -76,6 +76,9 @@ export const addProductFormElements = [
       { id: "chocolate", label: "Chocolate" },
       { id: "strawberry", label: "Strawberry" },
       { id: "mint", label: "Mint" },
+      { id: "berrygrape", label: "Berry Grape" },
+      { id: "articmint", label: "Artic Mint" },
+      { id: "blackberryice", label: "Blackberry Ice" },
       { id: " assortedflavors", label: " Assorted Flavors" },
     ],
   },
@@ -93,6 +96,7 @@ export const addProductFormElements = [
       { id: "airfuze", label: "Airfuze" },
       { id: "vuse", label: "Vuse" },
        { id: "cbd", label: "CBD" },
+       { id: "vapenginmars", label: "Vapengin Mars" },
 
     ],
   },
@@ -157,6 +161,7 @@ export const brandOptionsMap = {
   airfuze: "Airfuze",
   vuse: "Vuse",
   cbd: "CBD",
+  vapenginmars: "Vapengin Mars",
 };
 
 export const filterOptions = {
@@ -175,6 +180,7 @@ export const filterOptions = {
     { id: "airfuze", label: "Airfuze" },
     { id: "vuse", label: "Vuse" },
     { id: "cbd", label: "CBD" },
+    { id: "vapenginmars", label: "Vapengin Mars" },
   ],
 };
 

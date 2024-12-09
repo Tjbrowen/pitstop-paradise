@@ -61,8 +61,6 @@ router.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
-  console.log("Token:", token, "Password:", password);
-
   if (!password) {
     return res.status(400).json({ success: false, message: "Password is required." });
   }

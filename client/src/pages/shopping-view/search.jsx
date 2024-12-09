@@ -37,7 +37,7 @@ function SearchProducts() {
   }, [keyword]);
 
   function handleAddtoCart(getCurrentProductId, getTotalStock, flavor) {
-    console.log(cartItems);
+   
     let getCartItems = cartItems.items || [];
 
     if (getCartItems.length) {
@@ -75,7 +75,7 @@ function SearchProducts() {
   }
 
   function handleGetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId);
+  
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
@@ -83,7 +83,6 @@ function SearchProducts() {
     if (productDetails !== null) setOpenDetailsDialog(true);
   }, [productDetails]);
 
-  console.log(searchResults, "searchResults");
 
   return (
     <div
@@ -96,13 +95,13 @@ function SearchProducts() {
       minHeight: "100vh", 
     }}
   >
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-10">
         <div className="w-full flex items-center">
           <Input
             value={keyword}
             name="keyword"
             onChange={(event) => setKeyword(event.target.value)}
-            className="py-6"
+            className="py-20"
             placeholder="Search Products..."
           />
         </div>

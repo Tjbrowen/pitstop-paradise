@@ -54,7 +54,7 @@ function AdminProducts() {
             formData,
           })
         ).then((data) => {
-          console.log(data, "edit");
+         
 
           if (data?.payload?.success) {
             dispatch(fetchAllProducts());
@@ -102,63 +102,74 @@ function AdminProducts() {
 
   return (
     <Fragment>
-      <div className="mb-5 w-full flex justify-end">
-        <Button onClick={() => setOpenCreateProductsDialog(true)}>
-          Add New Product
-        </Button>
-      </div>
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {productList && productList.length > 0
-          ? productList.map((productItem) => (
-              <AdminProductTile
-                key={productItem._id}
-                setFormData={setFormData}
-                setOpenCreateProductsDialog={setOpenCreateProductsDialog}
-                setCurrentEditedId={setCurrentEditedId}
-                product={productItem}
-                handleDelete={handleDelete}
-              />
-            ))
-          : null}
-      </div>
-      <Sheet
-        open={openCreateProductsDialog}
-        onOpenChange={() => {
-          setOpenCreateProductsDialog(false);
-          setCurrentEditedId(null);
-          setFormData(initialFormData);
+      <div
+        className="container mx-auto md:px-6 px-4 py-8"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          minHeight: "100vh",
         }}
       >
-        <SheetContent side="right" className="overflow-auto">
-          <SheetHeader>
-            <SheetTitle>
-            <span style={{ color: "white" }}>
-  {currentEditedId !== null ? "Edit Product" : "Add New Product"}
-</span>
-
-            </SheetTitle>
-          </SheetHeader>
-          <ProductImageUpload
-            imageFile={imageFile}
-            setImageFile={setImageFile}
-            uploadedImageUrl={uploadedImageUrl}
-            setUploadedImageUrl={setUploadedImageUrl}
-            setImageLoadingState={setImageLoadingState}
-            imageLoadingState={imageLoadingState}
-            isEditMode={currentEditedId !== null}
-          />
-          <div className="py-6">
-            <CommonForm
-              onSubmit={onSubmit}
-              formData={formData}
-              setFormData={setFormData}
-              buttonText={currentEditedId !== null ? "Edit" : "Add"}
-              formControls={addProductFormElements}
-              isBtnDisabled={!isFormValid()}
+        <div className="mb-5 w-full flex justify-end">
+          <Button onClick={() => setOpenCreateProductsDialog(true)}>
+            Add New Product
+          </Button>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+          {productList && productList.length > 0
+            ? productList.map((productItem) => (
+                <AdminProductTile
+                  key={productItem._id}
+                  setFormData={setFormData}
+                  setOpenCreateProductsDialog={setOpenCreateProductsDialog}
+                  setCurrentEditedId={setCurrentEditedId}
+                  product={productItem}
+                  handleDelete={handleDelete}
+                />
+              ))
+            : null}
+        </div>
+        <Sheet
+          open={openCreateProductsDialog}
+          onOpenChange={() => {
+            setOpenCreateProductsDialog(false);
+            setCurrentEditedId(null);
+            setFormData(initialFormData);
+          }}
+        >
+          <SheetContent side="right" className="overflow-auto">
+            <SheetHeader>
+              <SheetTitle>
+                <span style={{ color: "white" }}>
+                  {currentEditedId !== null ? "Edit Product" : "Add New Product"}
+                </span>
+              </SheetTitle>
+            </SheetHeader>
+            <ProductImageUpload
+              imageFile={imageFile}
+              setImageFile={setImageFile}
+              uploadedImageUrl={uploadedImageUrl}
+              setUploadedImageUrl={setUploadedImageUrl}
+              setImageLoadingState={setImageLoadingState}
+              imageLoadingState={imageLoadingState}
+              isEditMode={currentEditedId !== null}
             />
-          </div>
-        </SheetContent>
-      </Sheet>
+            <div className="py-6">
+              <CommonForm
+                onSubmit={onSubmit}
+                formData={formData}
+                setFormData={setFormData}
+                buttonText={currentEditedId !== null ? "Edit" : "Add"}
+                formControls={addProductFormElements}
+                isBtnDisabled={!isFormValid()}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </Fragment>
   );
 }

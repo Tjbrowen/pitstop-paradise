@@ -25,6 +25,7 @@ const path = require('path');
 const Order = require('./models/Order');
 const { v4: uuidv4 } = require('uuid'); 
 const Cart = require('./models/Cart');
+const ProductReview = require('./models/Review');
 
 
 mongoose.connect(
@@ -94,12 +95,9 @@ app.post('/api/auth/send-order-alert-email', async (req, res) => {
 app.post('/api/create-order', async (req, res) => {
   try {
     const orderData = req.body;
-
-    // Debugging: Log the received data
-    console.log('Received order data:', orderData);
-
     const { userId, cartItems, shippingCost, totalAmount, addressInfo } = orderData;
 
+    // Validate required fields
     if (!userId || !cartItems || !shippingCost || !totalAmount || !addressInfo) {
       return res.status(400).json({
         success: false,
@@ -109,9 +107,13 @@ app.post('/api/create-order', async (req, res) => {
 
     const date = new Date();
 
+    // Use userId as cartId
+    const cartId = userId;
+
     // Create a new order document
     const newOrder = new Order({
       userId,
+      cartId, // Use userId as cartId
       cartItems,
       shippingCost,
       totalAmount,
@@ -123,17 +125,9 @@ app.post('/api/create-order', async (req, res) => {
 
     // Save the order to the database
     const savedOrder = await newOrder.save();
-    console.log('Saved order in DB:', savedOrder);
 
-    // Clear the cart after order is placed
-    if (userId) {
-      // Remove the cart items for the logged-in user
-      await Cart.deleteMany({ userId });
-      console.log(`Cleared cart for user ${userId}`);
-    } else {
-      // For guest users, handle clearing the cart in the frontend (using localStorage or similar)
-      console.log('Clearing cart for guest user');
-    }
+    // Remove the cart items for the logged-in user
+    await Cart.deleteMany({ userId });
 
     // Send email notification with orderId
     const result = await orderEmailService(orderData, savedOrder._id);
@@ -143,12 +137,13 @@ app.post('/api/create-order', async (req, res) => {
         success: true,
         message: 'Order placed and email sent successfully',
         orderId: savedOrder._id,
+        cartId, // Return the cartId (same as userId)
       });
     } else {
       return res.status(500).json(result);
     }
   } catch (error) {
-    console.error('Unhandled error in /api/create-order:', error);
+    console.error('Error in /api/create-order:', error);
     return res.status(500).json({
       success: false,
       error: 'Unexpected error occurred while processing the order.',
@@ -191,6 +186,44 @@ app.get('/api/shop/order/details/:orderId', async (req, res) => {
   }
 });
 
+app.post('/api/shop/review/add', async (req, res) => {
+ 
+
+  const { productId, userId, userName, reviewMessage, reviewValue } = req.body;
+
+  // Validate required fields
+  if (!productId || !userId || !reviewValue || !reviewMessage) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid data provided. Please provide all required fields.',
+    });
+  }
+
+  try {
+    // Create a new review instance
+    const newReview = new ProductReview({
+      productId,
+      userId,
+      userName,
+      reviewMessage,
+      reviewValue,
+    });
+
+    // Save the review to the database
+    await newReview.save();
+
+    return res.status(201).json({
+      success: true,
+      message: 'Review added successfully!',
+    });
+  } catch (error) {
+    console.error('Error saving review:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to save the review. Please try again.',
+    });
+  }
+});
 
 
 app.use(express.static(path.join(__dirname, 'client', 'public')));

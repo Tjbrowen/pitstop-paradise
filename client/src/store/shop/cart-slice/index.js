@@ -28,7 +28,7 @@ export const addToCart = createAsyncThunk(
   async ({ userId, productId, flavor = "default", quantity }, { rejectWithValue }) => {
     try {
       // Determine if the user is logged in or a guest
-      const guestId = localStorage.getItem("guestId"); // Assuming you store guestId in localStorage
+      const guestId = localStorage.getItem("guestId"); 
 
       // Ensure userId or guestId is passed
       if (!userId && !guestId) {
@@ -39,15 +39,15 @@ export const addToCart = createAsyncThunk(
       const response = await axios.post(
         "http://localhost:5000/api/shop/cart/add",
         {
-          userId: userId || null,  // If userId exists, send it, otherwise null
-          guestId: guestId || null, // If guestId exists, send it, otherwise null
+          userId: userId || null,  
+          guestId: guestId || null, 
           productId,
           quantity,
           flavor,
         }
       );
 
-      // Handle guest cart syncing if no userId (if you're handling it for guest)
+      
       if (!userId) {
         const updatedCart = response.data.data.map((item) => ({
           ...item,

@@ -7,12 +7,12 @@ const addProductReview = async (req, res) => {
     const { productId, userId, userName, reviewMessage, reviewValue } =
       req.body;
 
-    const order = await Order.findOne({
-      userId,
-      "cartItems.productId": productId,
-      // orderStatus: "confirmed" || "delivered",
-    });
-
+      const order = await Order.findOne({
+        userId,
+        "cartItems.productId": productId,
+        orderStatus: { $in: ["confirmed", "delivered"] },  // Ensure order is confirmed or delivered
+      });
+  
     if (!order) {
       return res.status(403).json({
         success: false,
@@ -55,7 +55,7 @@ const addProductReview = async (req, res) => {
       data: newReview,
     });
   } catch (e) {
-    console.log(e);
+   
     res.status(500).json({
       success: false,
       message: "Error",
@@ -73,7 +73,7 @@ const getProductReviews = async (req, res) => {
       data: reviews,
     });
   } catch (e) {
-    console.log(e);
+   
     res.status(500).json({
       success: false,
       message: "Error",

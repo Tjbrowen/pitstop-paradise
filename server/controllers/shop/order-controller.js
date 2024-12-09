@@ -46,8 +46,7 @@ const createOrder = async (req, res) => {
         item.flavor = 'Default Flavor';
       }
     });
-    
-    console.log("Cart Items with Flavor:", cartItems);
+  
 
     const subtotal = cartItems.reduce(
       (acc, item) => acc + (item.price || 0) * (item.quantity || 0),

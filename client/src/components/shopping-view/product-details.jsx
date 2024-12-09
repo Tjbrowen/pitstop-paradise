@@ -12,6 +12,7 @@ import StarRatingComponent from "../common/star-rating";
 import { useEffect, useState } from "react";
 import { addReview, getReviews } from "@/store/shop/review-slice";
 import PropTypes from "prop-types";
+import { CircularProgress } from "@mui/material";
 
 
 
@@ -26,12 +27,11 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   const { cartItems } = useSelector((state) => state.shopCart);
   const { reviews } = useSelector((state) => state.shopReview);
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  
   function handleFlavorChange(flavor) {
     setFlavor(flavor);
   }
-  
-
-
  
 
   function handleRatingChange(getRating) {
@@ -39,85 +39,67 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }
 
   function handleAddToCart(getCurrentProductId, getTotalStock) {
+    setLoading(true); 
+  
     const getCartItems = cartItems.items || [];
-    
-    // If no flavor is selected, show an error
+  
     if (!flavor) {
       toast({ title: "Please select a flavor before adding to cart", variant: "destructive" });
+      setLoading(false); 
       return;
     }
   
-    const indexOfCurrentItem = getCartItems.findIndex(
-      (item) => item.productId === getCurrentProductId && item.flavor === flavor
-    );
-  
-    if (indexOfCurrentItem > -1) {
-      const getQuantity = getCartItems[indexOfCurrentItem].quantity;
-      if (getQuantity + 1 > getTotalStock) {
-        toast({
-          title: `Only ${getTotalStock - getQuantity} quantity can be added for this item`,
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-  
-    if (user?.id) {
-      // For logged-in users
-      dispatch(
-        addToCart({
-          userId: user.id,
-          productId: getCurrentProductId,
-          quantity: 1,
-          flavor: flavor,
-        })
-      ).then((data) => {
-        if (data?.payload?.success) {
-          dispatch(fetchCartItems(user.id));  // Fetch updated cart items after successful addition
-          toast({ title: "Product added to cart" });
-        } else {
-          toast({ title: "Failed to add product to cart", variant: "destructive" });
-        }
-      }).catch(() => {
-        toast({ title: "Error adding product to cart", variant: "destructive" });
-      });
-    } else {
-      // For guest users
-      const guestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
-      const guestItemIndex = guestCartItems.findIndex(
+    try {
+      const indexOfCurrentItem = getCartItems.findIndex(
         (item) => item.productId === getCurrentProductId && item.flavor === flavor
       );
   
-      if (guestItemIndex > -1) {
-        // Update the quantity if the item already exists
-        guestCartItems[guestItemIndex].quantity += 1;
-      } else {
-        // Add new product to guest cart
-        guestCartItems.push({
-          productId: getCurrentProductId,
-          quantity: 1,
-          flavor: flavor,
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getTotalStock - getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+      }
+  
+      if (user?.id) {
+       
+        dispatch(
+          addToCart({
+            userId: user.id,
+            productId: getCurrentProductId,
+            quantity: 1,
+            flavor: flavor,
+          })
+        ).then((data) => {
+          if (data?.payload?.success) {
+            dispatch(fetchCartItems(user.id));
+            toast({ title: "Product added to cart" });
+          } else {
+            toast({ title: "Failed to add product to cart", variant: "destructive" });
+          }
+          setLoading(false); 
+        }).catch((error) => {
+          console.error(error);  
+          toast({ title: "Error adding product to cart", variant: "destructive" });
+          setLoading(false); 
         });
-      }
-  
-      localStorage.setItem("guestCart", JSON.stringify(guestCartItems));
-  
-      // Fetch updated cart from localStorage before dispatching Redux
-      const updatedGuestCartItems = JSON.parse(localStorage.getItem("guestCart")) || [];
-  
-      // Synchronize Redux state with updated localStorage
-      dispatch(fetchCartItems()); // Assuming this function updates the Redux state from localStorage data
-  
-      toast({ title: "Product added to cart" });
-  
-      // Optionally, verify cart contents
-      if (updatedGuestCartItems.some(item => item.productId === getCurrentProductId && item.flavor === flavor)) {
-        console.log("Product successfully added to guest cart:", updatedGuestCartItems);
       } else {
-        console.error("Failed to add product to guest cart:", updatedGuestCartItems);
+       
+        toast({ title: "You need to be logged in to add products to the cart", variant: "destructive" });
+        setLoading(false); 
       }
+    } catch (error) {
+      console.error(error);  
+      toast({ title: "An unexpected error occurred", variant: "destructive" });
+      setLoading(false); 
     }
   }
+  
   
   
   function handleDialogClose() {
@@ -127,39 +109,47 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
     setReviewMsg("");
     setFlavor("");
   }
+
   function handleAddReview() {
-    // Check if the user is logged in
     if (!user?.id) {
-      toast({ title: " You must be logged in to add a review." });
-      return; 
+      toast({
+        title: "You need to be logged in to add a review",
+        variant: "destructive", 
+      });
+      return;
     }
   
-    // Check if the product was delivered
-    if (!productDetails?.isDelivered) {
-      toast({ title: "Error: Product not delivered. Unable to add review." });
-      return; 
-    }
-  
-    // Proceed to add review if the user is logged in and product was delivered
     dispatch(
       addReview({
         productId: productDetails?._id,
-        userId: user.id,
-        userName: user.userName,
+        userId: user?.id,
+        userName: user?.userName,
         reviewMessage: reviewMsg,
         reviewValue: rating,
       })
-    ).then((data) => {
-      if (data.payload.success) {
-        setRating(0);
-        setReviewMsg("");
-        dispatch(getReviews(productDetails?._id));
-        toast({ title: "Review added successfully!" });
-      } else {
-        // Handle error case from addReview
-        toast({ title: "Error adding review." });
-      }
-    });
+    )
+      .then((data) => {
+        if (data.payload.success) {
+          setRating(0);
+          setReviewMsg("");
+          dispatch(getReviews(productDetails?._id));
+          toast({
+            title: "Review added successfully!",
+          });
+        } else {
+          toast({
+            title: "Failed to add review",
+            variant: "destructive",
+          });
+        }
+      })
+      .catch((error) => {
+        toast({
+          title: "Error adding review",
+          variant: "destructive",
+        });
+        console.error(error);
+      });
   }
   
   
@@ -168,9 +158,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   }, [productDetails]);
 
   useEffect(() => {
-    console.log("Selected Flavor:", flavor);
-    console.log("Product Details:", productDetails);
-  }, [flavor, productDetails]);
+   }, [flavor, productDetails]);
   
 
   const averageReview =
@@ -179,7 +167,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
         reviews.length
       : 0;
 
-      console.log('productDetails: ', productDetails)
+      
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent
@@ -255,19 +243,26 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 Out of Stock
               </Button>
             ) : (
-              <Button
-              className="w-full text-white bg-blue-500 hover:bg-green-500 cursor-pointer"
-              style={{
-                backgroundColor: flavor ? '#3b82f6' : '#ccc',
-                transition: 'background-color 0.3s ease',
-              }}
-              onClick={() =>
-                handleAddToCart(productDetails?._id, productDetails?.totalStock)
-              }
-              disabled={!flavor}
-            >
-              {flavor ? "Add to Cart" : "Please Select a Flavor"}
-            </Button>
+             
+<Button
+  className="w-full text-white bg-blue-500 hover:bg-green-500 cursor-pointer"
+  style={{
+    backgroundColor: flavor ? '#3b82f6' : '#ccc',
+    transition: 'background-color 0.3s ease',
+  }}
+  onClick={() =>
+    handleAddToCart(productDetails?._id, productDetails?.totalStock)
+  }
+  disabled={!flavor}
+>
+  {loading ? (
+    <CircularProgress color="success" size={24} />
+  ) : flavor ? (
+    "Add to Cart"
+  ) : (
+    "Please Select a Flavor"
+  )}
+</Button>
             
             
 
@@ -299,7 +294,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                       <div className="flex items-center gap-0.5">
                         <StarRatingComponent rating={reviewItem?.reviewValue} />
                       </div>
-                      <p className="text-muted-foreground">
+                      <p className="text-muted-foreground text-white">
                         {reviewItem.reviewMessage}
                       </p>
                     </div>

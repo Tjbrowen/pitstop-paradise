@@ -7,7 +7,7 @@ function FlavorSelector({ productId, onFlavorSelect }) {
     const [flavor, setFlavor] = useState("");
 
     useEffect(() => {
-        console.log("Fetching product details for ID:", productId); // Log productId
+     
         async function fetchProductDetails() {
             try {
                 const response = await axios.get(`http://localhost:5000/api/admin/products/6717ee9...
@@ -28,7 +28,7 @@ function FlavorSelector({ productId, onFlavorSelect }) {
     const handleFlavorChange = (e) => {
         const flavor = e.target.value;
         setFlavor(flavor);
-        console.log("Selected flavor:", flavor); // Log the selected flavor
+  
         onFlavorSelect(flavor); 
     };
 

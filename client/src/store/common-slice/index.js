@@ -30,7 +30,7 @@ export const deleteFeatureImage = createAsyncThunk(
   async (imageId) => {
     try {
       const response = await axios.delete(`http://localhost:5000/api/common/feature/delete/${imageId}`);
-      console.log('Delete response:', response.data); // Check response
+    
       return response.data;
     } catch (error) {
       console.error('Error deleting image:', error);

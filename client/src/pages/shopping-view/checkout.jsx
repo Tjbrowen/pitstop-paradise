@@ -117,9 +117,9 @@ function ShoppingCheckout() {
       
             // Clear the cart after a successful checkout
             dispatch(clearCart());
-            localStorage.removeItem("guestCart"); // Remove guest cart from local storage if it's a guest
+            localStorage.removeItem("guestCart"); 
       
-            console.log("Cart cleared after checkout.");
+           
           } else {
             toast({
               title: "Order failed. Please try again.",

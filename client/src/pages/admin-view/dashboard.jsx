@@ -40,7 +40,19 @@ function AdminDashboard() {
   }, [dispatch]);
 
   return (
-    <div>
+    <div
+    
+    className="container mx-auto md:px-6 px-4 py-8"
+    style={{
+      backgroundImage: "url('https://res.cloudinary.com/daynaexaz/image/upload/v1728893288/blue-smokebg_cegir0.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      minHeight: "100vh", 
+    }}
+  >
+    
+    
       <ProductImageUpload
         imageFile={imageFile}
         setImageFile={setImageFile}
@@ -70,7 +82,7 @@ function AdminDashboard() {
       console.error("No ID provided for deletion."); 
       return;
     }
-    console.log("Deleting image with ID:", imageId);
+   
     handleDeleteFeatureImage(imageId);
   }}
   className="mt-2 w-'50%' bg-red-500 text-white"

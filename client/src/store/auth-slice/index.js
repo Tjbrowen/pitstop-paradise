@@ -20,13 +20,8 @@ export const registerUser = createAsyncThunk(
         { withCredentials: true }
       );
 
-     
-      console.log('Registration response:', response.data);
-
       if (response.data.success) {
-        
-        console.log('Dispatching login action after registration for email:', formData.email);
-
+    
         const loginResponse = await dispatch(
           loginUser({ email: formData.email, password: formData.password })
         );
@@ -134,7 +129,7 @@ export const resetPassword = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }), 
       });
-      console.log('debug', response)
+     
 
       const data = await response.json();
       if (!response.ok) {

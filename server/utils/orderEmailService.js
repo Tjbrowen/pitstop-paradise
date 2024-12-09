@@ -15,7 +15,7 @@ const generateOrderConfirmationPDF = (orderData, orderId) => {
 
     // Correct logo path using path module
     const logoPath = path.join(__dirname, '..', 'invoice', 'logo.png');
-    console.log('Logo file path:', logoPath);
+   
 
     // Add the company logo
     doc.image(logoPath, {
@@ -61,9 +61,11 @@ const generateOrderConfirmationPDF = (orderData, orderId) => {
     doc.moveDown();
     doc.fontSize(12).fillColor('#000000').text('Bank Details for EFT:', { underline: true });
     doc.moveDown();
-    doc.text('Account Number: 1234567890');
-    doc.text('Bank Name: Example Bank');
-    doc.text('Branch Code: 001234');
+    doc.text('Account Name: Pitstop Paradise');
+    doc.text('Account Number: 63127393419');
+    doc.text('Bank Name: FNB');
+    doc.text('Branch Code: 255355');
+    doc.text('Swift code: FIRNZAJJ');
 
     // Footer
     doc.moveDown(4);
