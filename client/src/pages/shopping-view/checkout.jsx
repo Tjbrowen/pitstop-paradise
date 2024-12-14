@@ -99,7 +99,7 @@ function ShoppingCheckout() {
       
         try {
           const response = await axios.post(
-            `http://localhost:5000/api/create-order`,
+            `/api/create-order`,
             orderData
           );
       

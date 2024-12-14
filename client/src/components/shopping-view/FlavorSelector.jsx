@@ -10,7 +10,7 @@ function FlavorSelector({ productId, onFlavorSelect }) {
      
         async function fetchProductDetails() {
             try {
-                const response = await axios.get(`http://localhost:5000/api/admin/products/6717ee9...
+                const response = await axios.get(`/api/admin/products/6717ee9...
 `);
                 setProductDetails(response.data);
             } catch (error) {

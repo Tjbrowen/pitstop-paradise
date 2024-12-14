@@ -92,7 +92,8 @@ function SearchProducts() {
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
-      minHeight: "100vh", 
+      minHeight: "100vh",
+      padding: "100px", 
     }}
   >
       <div className="flex justify-center mb-10">
@@ -101,7 +102,7 @@ function SearchProducts() {
             value={keyword}
             name="keyword"
             onChange={(event) => setKeyword(event.target.value)}
-            className="py-20"
+            className="py-10"
             placeholder="Search Products..."
           />
         </div>

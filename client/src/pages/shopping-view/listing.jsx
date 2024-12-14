@@ -151,6 +151,7 @@ function ShoppingListing() {
       backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'fixed',
       minHeight: "100vh",
+      padding: "100px",
     }}>
       <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className="w-full rounded-lg shadow-sm"

@@ -263,7 +263,7 @@ function ShoppingHome() {
 
 
 <a
-  href="https://wa.me/27762567775" 
+  href="https://wa.me/27 76 566 3834" 
   className="fixed bottom-20 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition mb-8"
   target="_blank" 
   rel="noopener noreferrer" 

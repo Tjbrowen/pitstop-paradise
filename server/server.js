@@ -17,13 +17,13 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
-const { resetPassword, authMiddleware } = require("./controllers/auth/auth-controller"); 
+const { authMiddleware } = require("./controllers/auth/auth-controller"); 
 
-const sendOrderAlertEmail = require('./utils/sendOrderAlertEmail');
+
 const orderEmailService = require('./utils/orderEmailService');
 const path = require('path');
 const Order = require('./models/Order');
-const { v4: uuidv4 } = require('uuid'); 
+
 const Cart = require('./models/Cart');
 const ProductReview = require('./models/Review');
 
@@ -41,7 +41,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin : 'http://localhost:5173',
+    origin : '/',
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
     allowedHeaders : [
       "Content-Type",

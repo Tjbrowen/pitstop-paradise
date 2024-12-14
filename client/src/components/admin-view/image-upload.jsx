@@ -37,7 +37,7 @@ function ProductImageUpload({
   async function handleRemoveImage() {
     if (uploadedImageUrl) {
       try {
-        await axios.delete(`http://localhost:5000/api/admin/products/delete-image`, {
+        await axios.delete(`/api/admin/products/delete-image`, {
           data: { url: uploadedImageUrl },
         });
       } catch (error) {
@@ -57,7 +57,7 @@ function ProductImageUpload({
     const data = new FormData();
     data.append("my_file", imageFile);
     const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+      "/api/admin/products/upload-image",
       data
     );
 

@@ -15,7 +15,7 @@ export const registerUser = createAsyncThunk(
   async (formData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "/api/auth/register",
         formData,
         { withCredentials: true }
       );
@@ -47,7 +47,7 @@ export const loginUser = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "/api/auth/login",
         formData,
         { withCredentials: true }
       );
@@ -64,7 +64,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/logout",
+        "/api/auth/logout",
         {},
         { withCredentials: true }
       );
@@ -85,7 +85,7 @@ export const checkAuth = createAsyncThunk(
       throw new Error('No token provided');
     }
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/check-auth", {
+      const response = await axios.get("/api/auth/check-auth", {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -106,7 +106,7 @@ export const requestPasswordReset = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        "/api/auth/forgot-password",
         { email },
         { withCredentials: true }
       );
@@ -124,7 +124,7 @@ export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async ({ token, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
+      const response = await fetch(`/api/auth/reset-password/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }), 
@@ -147,7 +147,7 @@ export const requestSendOrderAlertEmail = createAsyncThunk(
   async ({ customerEmail, orderDetails }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/send-order-alert-email",
+        "/api/auth/send-order-alert-email",
         { customerEmail, orderDetails },
         { withCredentials: true }
       );

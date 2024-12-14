@@ -37,7 +37,7 @@ export const addToCart = createAsyncThunk(
 
       // Send the appropriate userId or guestId
       const response = await axios.post(
-        "http://localhost:5000/api/shop/cart/add",
+        "/api/shop/cart/add",
         {
           userId: userId || null,  
           guestId: guestId || null, 
@@ -72,7 +72,7 @@ export const fetchCartItems = createAsyncThunk(
     }
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/shop/cart/get/${userId}`
+        `/api/shop/cart/get/${userId}`
       );
       return response.data;
     } catch (error) {
@@ -101,7 +101,7 @@ export const deleteCartItem = createAsyncThunk(
       let updatedCart;
       if (userId) {
         const response = await axios.delete(
-          `http://localhost:5000/api/shop/cart/${userId}/${productId}/${flavor}`
+          `/api/shop/cart/${userId}/${productId}/${flavor}`
         );
         updatedCart = response.data.data;
       } else {
@@ -124,7 +124,7 @@ export const updateCartQuantity = createAsyncThunk(
     try {
       if (userId) {
         const response = await axios.put(
-          "http://localhost:5000/api/shop/cart/update-cart",
+          "/api/shop/cart/update-cart",
           { userId, productId, quantity, flavor }
         );
         return response.data;

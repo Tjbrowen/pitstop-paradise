@@ -10,7 +10,7 @@ const About = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         color: '#fff', 
-        padding: '50px 0', 
+        padding: '100px 0', 
         backgroundRepeat: "no-repeat",
       minHeight: "100vh", 
       }}
@@ -20,13 +20,10 @@ const About = () => {
           Welcome to PitStop Paradise
         </Typography>
         <Typography variant="body1" paragraph>
-          Your one-stop destination for all things automotive and relaxation! Our state-of-the-art car service center offers a wide range of maintenance and repair services to keep your vehicle running smoothly. From oil changes to tire rotations, our expert technicians use only the highest-quality parts and equipment to ensure your car receives the best care possible.
+        Welcome to our online store—your one-stop destination for premium vapes and CBD products! 
         </Typography>
         <Typography variant="body1" paragraph>
-          But that's not all - our facility also features a cozy cafe where you can unwind and recharge while you wait for your car to be serviced. Our cafe offers a selection of premium vapes and CBD products, as well as a chill spot to relax and enjoy a cup of coffee or snack. Whether you're a car enthusiast or just looking for a peaceful retreat, we've got you covered.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Take a look around our site to learn more about our car services and cafe offerings, and come visit us today!
+          We are dedicated to providing you with top-quality products that enhance your lifestyle and promote relaxation, whether you’re at home or on the go.
         </Typography>
       </Container>
     </Box>
